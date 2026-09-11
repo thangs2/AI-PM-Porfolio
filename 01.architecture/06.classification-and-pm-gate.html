@@ -1,0 +1,1562 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>06.classification-and-pm-gate.md | AI PM Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown-light.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <style>
+        :root { --sidebar-width: 380px; --primary-color: #0969da; --sidebar-bg: #f6f8fa; --border-color: #d0d7de; }
+        body { margin: 0; display: flex; font-family: -apple-system, sans-serif; background: #fff; }
+        #sidebar { width: var(--sidebar-width); height: 100vh; overflow-y: auto; border-right: 1px solid var(--border-color); background: var(--sidebar-bg); padding: 30px 20px; position: fixed; box-sizing: border-box; z-index: 100; }
+        .nav-folder { margin-top: 8px; list-style: none; padding: 0; }
+        .folder-toggle {
+            display: flex; align-items: center; gap: 6px; width: 100%;
+            font-size: 12px; font-weight: 700; color: #656d76; padding: 6px 10px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            background: transparent; border: none; border-radius: 6px; cursor: pointer; text-align: left;
+        }
+        .folder-toggle:hover { background: #ebeff2; color: #1f2328; }
+        .folder-toggle .chevron {
+            display: inline-flex; width: 14px; height: 14px; flex-shrink: 0;
+            transition: transform 0.15s ease; color: #8c959f;
+        }
+        .nav-folder.open > .folder-toggle .chevron { transform: rotate(90deg); }
+        .nav-sub-tree {
+            list-style: none; padding-left: 15px; margin: 2px 0 6px;
+            border-left: 1px solid var(--border-color); display: none;
+        }
+        .nav-folder.open > .nav-sub-tree { display: block; }
+        .nav-item { display: block; padding: 6px 12px; font-size: 13px; color: #1f2328 !important; text-decoration: none !important; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+        .nav-item:hover { background: #ebeff2; }
+        .nav-item.active { background: var(--primary-color) !important; color: #fff !important; font-weight: bold; box-shadow: 0 2px 4px rgba(9, 105, 218, 0.3); }
+        #content { margin-left: var(--sidebar-width); padding: 60px 80px; width: calc(100% - var(--sidebar-width)); box-sizing: border-box; }
+        .markdown-body { max-width: 1100px; margin: 0 auto; }
+        .mermaid-stage {
+            position: relative;
+            margin: 30px 0;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            background: #1e1e1e;
+            overflow: hidden;
+        }
+        .mermaid-stage.is-fullscreen {
+            position: fixed; inset: 0; z-index: 9999; margin: 0; border-radius: 0;
+            border: none; background: #0d1117;
+        }
+        .mermaid-toolbar {
+            position: absolute; top: 10px; right: 10px; z-index: 5;
+            display: flex; gap: 4px; padding: 4px;
+            background: rgba(22, 27, 34, 0.92); border: 1px solid #30363d; border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+        }
+        .mermaid-toolbar button {
+            appearance: none; border: none; cursor: pointer;
+            width: 32px; height: 32px; border-radius: 6px;
+            background: transparent; color: #e6edf3; font-size: 16px; line-height: 1;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .mermaid-toolbar button:hover { background: #30363d; }
+        .mermaid-toolbar .zoom-input {
+            width: 52px; height: 32px; box-sizing: border-box;
+            text-align: center; color: #e6edf3; background: #0d1117;
+            border: 1px solid #30363d; border-radius: 6px;
+            font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+            padding: 0 2px; outline: none;
+        }
+        .mermaid-toolbar .zoom-input:focus { border-color: #58a6ff; }
+        .mermaid-toolbar .zoom-suffix {
+            color: #8b949e; font: 12px/32px ui-monospace, SFMono-Regular, Menlo, monospace;
+            padding-right: 4px; user-select: none;
+        }
+        .mermaid-hint {
+            position: absolute; left: 12px; bottom: 10px; z-index: 5;
+            color: #8b949e; font-size: 11px; pointer-events: none;
+            background: rgba(22, 27, 34, 0.75); padding: 2px 8px; border-radius: 4px;
+        }
+        .mermaid-stage.is-fullscreen .mermaid-hint { display: none; }
+        .mermaid-viewport {
+            height: auto;
+            overflow: auto;
+            cursor: grab;
+            touch-action: none;
+            padding-top: 52px;
+            padding-bottom: 28px;
+        }
+        .mermaid-stage.is-fullscreen .mermaid-viewport {
+            height: 100vh;
+            overflow: hidden;
+        }
+        .mermaid-viewport:active { cursor: grabbing; }
+        .mermaid {
+            background: transparent; border: none; border-radius: 0;
+            padding: 24px; margin: 0; overflow: visible; text-align: center;
+            line-height: normal; color: #e6edf3;
+            width: 100%;
+            min-width: 0;
+            transform-origin: 0 0;
+        }
+        .mermaid svg {
+            max-width: 100% !important;
+            width: 100%;
+            height: auto !important;
+            display: block;
+            vertical-align: middle;
+        }
+        /* Structural only — never force node/label colors (classDef must win) */
+        .mermaid foreignObject div {
+            display: inline-block;
+            white-space: nowrap;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+        /* Soft nested clusters: keep Mermaid dark gray, make it translucent */
+        .mermaid .cluster rect {
+            fill-opacity: 0.45;
+        }
+        .mermaid-error { border-color: #cf222e; background: #fff8f8; color: #82071e; font-family: ui-monospace, Menlo, monospace; font-size: 12px; text-align: left; white-space: pre-wrap; margin: 30px 0; padding: 16px; border: 1px solid; border-radius: 8px; }
+
+        /* IDE-friendly code panels (LLD snippets) */
+        .markdown-body .code-panel {
+            margin: 1.25em 0 1.75em;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            background: #0d1117;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+        }
+        .markdown-body .code-panel-header {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; padding: 8px 12px;
+            background: #161b22; border-bottom: 1px solid #30363d;
+        }
+        .markdown-body .code-lang {
+            font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+            color: #79c0ff; letter-spacing: 0.01em;
+            background: #21262d; border: 1px solid #30363d;
+            border-radius: 999px; padding: 4px 10px;
+            text-transform: none;
+        }
+        .markdown-body .code-copy {
+            appearance: none; cursor: pointer;
+            font: 600 11px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #e6edf3; background: #21262d; border: 1px solid #30363d;
+            border-radius: 6px; padding: 6px 10px;
+        }
+        .markdown-body .code-copy:hover { background: #30363d; border-color: #8b949e; }
+        .markdown-body .code-copy.is-copied {
+            color: #3fb950; border-color: #238636; background: rgba(35, 134, 54, 0.15);
+        }
+        .markdown-body .code-panel-body {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            max-height: min(70vh, 640px);
+            overflow: auto;
+            background: #0d1117;
+        }
+        .markdown-body .code-lines {
+            user-select: none; text-align: right;
+            padding: 14px 0 14px 12px; min-width: 2.5em;
+            border-right: 1px solid #21262d; background: #0d1117;
+            font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            color: #484f58;
+        }
+        .markdown-body .code-lines span { display: block; padding-right: 12px; }
+        .markdown-body .code-pre {
+            margin: 0 !important; padding: 14px 16px !important;
+            background: transparent !important; border: none !important;
+            overflow: visible !important; border-radius: 0 !important;
+        }
+        .markdown-body .code-pre code {
+            display: block; padding: 0 !important; background: transparent !important;
+            font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+            color: #e6edf3; white-space: pre; tab-size: 4;
+        }
+        .markdown-body pre:not(.mermaid):not(.code-pre) {
+            /* fallback plain pre */
+            background: #0d1117; color: #e6edf3; border-radius: 10px; border: 1px solid #30363d;
+        }
+    </style>
+</head>
+<body>
+    <nav id="sidebar">
+        <h1 style="font-size:20px;margin-bottom:20px;font-weight:600;">Le Tat Thang</h1>
+        <ul style="list-style:none;padding:0;margin:0;"><li><a href="../00.index.html" class="nav-item">00. Index</a></li><li><a href="../00.overall-landscape.html" class="nav-item">00. Overall Landscape</a></li><li><a href="../01.pmp-phase-mapping.html" class="nav-item">01. PMP Phase Mapping</a></li><li class="nav-folder" data-nav-id="01.architecture"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>01. Architecture</span></button><ul class="nav-sub-tree"><li><a href="../01.architecture/01.operating-model.html" class="nav-item">01. Operating Model</a></li><li><a href="../01.architecture/02.nucleus-and-parallel-stacks.html" class="nav-item">02. Nucleus And Parallel Stacks</a></li><li><a href="../01.architecture/02b.claude-ai-nucleus.html" class="nav-item">02b. Claude AI Nucleus</a></li><li><a href="../01.architecture/03.mcp-system-map.html" class="nav-item">03. MCP System Map</a></li><li><a href="../01.architecture/04.departments-actors.html" class="nav-item">04. Departments Actors</a></li><li><a href="../01.architecture/05.rag-architecture.html" class="nav-item">05. Rag Architecture</a></li><li><a href="../01.architecture/06.classification-and-pm-gate.html" class="nav-item">06. Classification And Pm Gate</a></li><li><a href="../01.architecture/07.rubric-document.html" class="nav-item">07. Rubric Document</a></li><li><a href="../01.architecture/08.rubric-jira.html" class="nav-item">08. Rubric Jira</a></li><li><a href="../01.architecture/09.security-pii-governance.html" class="nav-item">09. Security PII Governance</a></li></ul></li><li class="nav-folder" data-nav-id="02.cases"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>02. Cases</span></button><ul class="nav-sub-tree"><li><a href="../02.cases/10.case-document-intake-verify.html" class="nav-item">10. Document Intake Verify</a></li><li><a href="../02.cases/11.case-jira-hierarchy-quality.html" class="nav-item">11. Jira Hierarchy Quality</a></li><li><a href="../02.cases/12.case-meet-to-ready.html" class="nav-item">12. Meet To Ready</a></li><li><a href="../02.cases/13.case-figma-ticket-drift.html" class="nav-item">13. Figma Ticket Drift</a></li><li><a href="../02.cases/14.case-sot-conflict.html" class="nav-item">14. SOT Conflict</a></li><li><a href="../02.cases/15.case-pr-ci-vs-ticket.html" class="nav-item">15. PR CI Vs Ticket</a></li><li><a href="../02.cases/16.case-status-pack.html" class="nav-item">16. Status Pack</a></li><li><a href="../02.cases/17.case-dependency-blocked.html" class="nav-item">17. Dependency Blocked</a></li><li><a href="../02.cases/18.case-mid-sprint-change.html" class="nav-item">18. Mid Sprint Change</a></li><li><a href="../02.cases/19.case-data-sql-excel-report.html" class="nav-item">19. Data SQL Excel Report</a></li><li><a href="../02.cases/20.case-sow-assessment-vs-backlog.html" class="nav-item">20. SOW Assessment Vs Backlog</a></li><li><a href="../02.cases/21.case-dod-evidence.html" class="nav-item">21. DOD Evidence</a></li><li><a href="../02.cases/22.case-dontpassmessage.html" class="nav-item">22. Dontpassmessage</a></li><li><a href="../02.cases/23.case-weekly-blocked-scan.html" class="nav-item">23. Weekly Blocked Scan</a></li><li><a href="../02.cases/24.case-auto-ready-vs-pm-exception.html" class="nav-item">24. Auto Ready Vs Pm Exception</a></li><li><a href="../02.cases/25.case-spike-timebox.html" class="nav-item">25. Spike Timebox</a></li><li><a href="../02.cases/26.case-dept-tradeoff.html" class="nav-item">26. Dept Tradeoff</a></li><li><a href="../02.cases/27.case-incident-not-story.html" class="nav-item">27. Incident Not Story</a></li></ul></li><li class="nav-folder" data-nav-id="03.edges"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>03. Edges</span></button><ul class="nav-sub-tree"><li><a href="../03.edges/30.edge-unreadable-ocr.html" class="nav-item">30. Unreadable OCR</a></li><li><a href="../03.edges/31.edge-huge-doc-thin-signal.html" class="nav-item">31. Huge Doc Thin Signal</a></li><li><a href="../03.edges/32.edge-meeting-verbal-ac.html" class="nav-item">32. Meeting Verbal AC</a></li><li><a href="../03.edges/33.edge-ac-is-how.html" class="nav-item">33. AC Is How</a></li><li><a href="../03.edges/34.edge-epic-as-one-story.html" class="nav-item">34. Epic As One Story</a></li><li><a href="../03.edges/35.edge-subtask-two-pods.html" class="nav-item">35. Subtask Two Pods</a></li><li><a href="../03.edges/36.edge-pii-quarantine.html" class="nav-item">36. PII Quarantine</a></li><li><a href="../03.edges/37.edge-filename-version-chaos.html" class="nav-item">37. Filename Version Chaos</a></li><li><a href="../03.edges/38.edge-ai-hallucinated-ac.html" class="nav-item">38. AI Hallucinated AC</a></li><li><a href="../03.edges/39.edge-auto-move-without-pm.html" class="nav-item">39. Auto Move Without Pm</a></li><li><a href="../03.edges/40.edge-stale-paste-vs-drive.html" class="nav-item">40. Stale Paste Vs Drive</a></li><li><a href="../03.edges/41.edge-jira-git-key-mismatch.html" class="nav-item">41. Jira Git Key Mismatch</a></li><li><a href="../03.edges/42.edge-sql-prod-write.html" class="nav-item">42. SQL Prod Write</a></li><li><a href="../03.edges/43.edge-batch-classify-exceptions.html" class="nav-item">43. Batch Classify Exceptions</a></li><li><a href="../03.edges/44.edge-ready-externally-blocked.html" class="nav-item">44. Ready Externally Blocked</a></li><li><a href="../03.edges/45.edge-pod-bounce-to-sender.html" class="nav-item">45. Pod Bounce To Sender</a></li><li><a href="../03.edges/46.edge-duplicate-ask.html" class="nav-item">46. Duplicate Ask</a></li><li><a href="../03.edges/47.edge-defer-wip-unfunded.html" class="nav-item">47. Defer Wip Unfunded</a></li><li><a href="../03.edges/48.edge-reject-wrong-artifact.html" class="nav-item">48. Reject Wrong Artifact</a></li><li><a href="../03.edges/49.edge-secret-leak.html" class="nav-item">49. Secret Leak</a></li><li><a href="../03.edges/50.edge-env-access-blocked.html" class="nav-item">50. Env Access Blocked</a></li><li><a href="../03.edges/51.edge-irreversible-change.html" class="nav-item">51. Irreversible Change</a></li><li><a href="../03.edges/52.edge-silent-sender-dispute.html" class="nav-item">52. Silent Sender Dispute</a></li></ul></li></ul>
+    </nav>
+    <main id="content"><article class="markdown-body"><h1>06 — Classification vocabulary and PM gate</h1>
+<h2>Purpose</h2>
+<p>Exact <strong>classes</strong>, <strong>reason codes</strong>, Drive folders, Jira workflow, and <strong>who commits</strong> after classify. The trust ladder (auto-Ready vs bounce vs exception) is <a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a>. Rubric A–G is <a href="./07.rubric-document.html">07</a> / <a href="./08.rubric-jira.html">08</a>.</p>
+<p>Amateur gate: two buckets (good / bad) and the TDM is the queue.<br>Elite gate: <strong>typed exit</strong>, <strong>named next actor</strong>, SLA only on <code>REWORK</code>, park without guilt, P0 is not a story, commercial is not a rubric fail.</p>
+<h2>1. Classes (closed set)</h2>
+<p>One class per artifact. If two fire, take <strong>precedence</strong> (section 3), keep the other codes on the envelope.</p>
+<table>
+<thead>
+<tr>
+<th>Lane</th>
+<th>Class</th>
+<th>Meaning</th>
+<th>Next actor</th>
+<th>Wait TDM?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Quality</td>
+<td><code>VERIFIED</code></td>
+<td>A–G / hierarchy pass</td>
+<td>Auto Ready / <code>/verified</code> <strong>or</strong> PM if exception flags</td>
+<td>Only if exception</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td><code>REWORK</code></td>
+<td>Fixable hole; reason codes required</td>
+<td><strong>Sender</strong> + SLA 24–48h</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td><code>SPIKE</code></td>
+<td>Unknown <em>how</em> on purpose; timeboxed discovery</td>
+<td>Pod or BA, clock on the ticket</td>
+<td>No (PM only if spike &gt; budget)</td>
+</tr>
+<tr>
+<td>Safety</td>
+<td><code>QUARANTINE</code></td>
+<td>PII, malware, unreadable, secret leak</td>
+<td>Security / DPO — <strong>no RAG</strong></td>
+<td>Yes (legal), not as DoR</td>
+</tr>
+<tr>
+<td>Safety</td>
+<td><code>REJECT</code></td>
+<td>Wrong artifact, spam, not a requirement</td>
+<td>Close / <code>/reject</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Safety</td>
+<td><code>DUPLICATE</code></td>
+<td>Same ask as an existing key</td>
+<td>Link canonical + close this one</td>
+<td>No (PM if dispute which is canonical)</td>
+</tr>
+<tr>
+<td>Truth</td>
+<td><code>CONFLICT</code></td>
+<td>Two SoT disagree</td>
+<td><strong>PM / human</strong> picks canonical</td>
+<td><strong>Always</strong></td>
+</tr>
+<tr>
+<td>Portfolio</td>
+<td><code>DEFER</code></td>
+<td>Valid work, <strong>wrong now</strong> (WIP, date, unfunded)</td>
+<td>Backlog / <code>/park</code> — <strong>no sender SLA</strong></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Portfolio</td>
+<td><code>CHANGE</code></td>
+<td>Mid-cycle insert into a loaded sprint</td>
+<td>Swap equal size <strong>or</strong> wait — Lead if conflict</td>
+<td>Yes for swap</td>
+</tr>
+<tr>
+<td>Portfolio</td>
+<td><code>TRADEOFF</code></td>
+<td>Two depts, one slot (CS vs Fraud vs Pay)</td>
+<td><strong>Lead + PM</strong></td>
+<td><strong>Always</strong></td>
+</tr>
+<tr>
+<td>Live</td>
+<td><code>INCIDENT</code></td>
+<td>Sev / live breakage</td>
+<td>War room (pod + on-call). <strong>Not</strong> A–G intake</td>
+<td>Inform, do not Ready as a feature</td>
+</tr>
+<tr>
+<td>In-flight</td>
+<td><code>BLOCKED_EXT</code></td>
+<td>Quality OK; waiting another team / vendor</td>
+<td>Status Blocked — do <strong>not</strong> un-Ready AC</td>
+<td>Escalate if needed-by missed</td>
+</tr>
+<tr>
+<td>Exit</td>
+<td><code>DONE_FAIL</code></td>
+<td>Marked Done without evidence</td>
+<td>Reopen / In Review — pod owns the hole</td>
+<td>Sample, not a queue</td>
+</tr>
+</tbody></table>
+<p>Aliases already used in cases (do not mint a second class):</p>
+<table>
+<thead>
+<tr>
+<th>Written in a case</th>
+<th>Canonical</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>needs-deps</code> <a href="../02.cases/17.case-dependency-blocked.html">17</a></td>
+<td>reason <code>missing-deps</code> under <code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>needs-ac</code> <a href="../03.edges/32.edge-meeting-verbal-ac.html">32</a></td>
+<td>reason <code>missing-ac</code> / <code>verbal-ac</code> + Jira <strong>status</strong> <code>Needs_AC</code></td>
+</tr>
+<tr>
+<td><code>design-drift</code> <a href="../02.cases/13.case-figma-ticket-drift.html">13</a></td>
+<td>reason under <code>CONFLICT</code></td>
+</tr>
+<tr>
+<td><code>done-not-done</code> <a href="../02.cases/21.case-dod-evidence.html">21</a></td>
+<td>class <code>DONE_FAIL</code> + reason <code>done-not-done</code></td>
+</tr>
+<tr>
+<td><code>orphan</code> <a href="../03.edges/35.edge-subtask-two-pods.html">35</a></td>
+<td><code>orphan-subtask</code></td>
+</tr>
+<tr>
+<td><code>scope-gap</code> <a href="../02.cases/20.case-sow-assessment-vs-backlog.html">20</a></td>
+<td>reason under <code>TRADEOFF</code> or <code>DEFER</code> (commercial), not <code>REWORK</code></td>
+</tr>
+</tbody></table>
+<p><code>VERIFIED</code> is a <strong>quality class</strong>, not a TDM queue item.</p>
+<h2>2. Precedence (classifier must not flip a coin)</h2>
+<pre class="mermaid">flowchart TB
+  In[Artifact in] --&gt; S{Safety?}
+  S --&gt;|PII / unreadable / secret| Q[QUARANTINE]
+  S --&gt;|spam / wrong type| RJ[REJECT]
+  S --&gt;|same as existing key| DUP[DUPLICATE]
+  S --&gt;|no| L{Live Sev?}
+  L --&gt;|yes| INC[INCIDENT]
+  L --&gt;|no| T{Two SoT?}
+  T --&gt;|yes| CF[CONFLICT]
+  T --&gt;|no| P{Portfolio?}
+  P --&gt;|two depts one slot| TO[TRADEOFF]
+  P --&gt;|insert vs sprint goal| CH[CHANGE]
+  P --&gt;|right work wrong time| DF[DEFER]
+  P --&gt;|unknown how on purpose| SP[SPIKE]
+  P --&gt;|no| G{A-G / layer?}
+  G --&gt;|fail| RW[REWORK]
+  G --&gt;|pass| V[VERIFIED]
+  V --&gt; X{Exception flags?}
+  X --&gt;|yes| PM[commit_path pm]
+  X --&gt;|no| Auto[commit_path auto]</pre>
+<p>After Ready: dep slip → <code>BLOCKED_EXT</code>. Fake Done → <code>DONE_FAIL</code>. Pod cannot execute → <code>REWORK</code> + <code>bounce-from-pod</code> to <strong>sender</strong> (<a href="../03.edges/45.edge-pod-bounce-to-sender.html">45</a>).</p>
+<h2>3. Reason codes (closed catalog)</h2>
+<p>Attach <strong>all</strong> that apply. Class is one; codes are many. Next actor follows the <strong>class</strong>, not the code.</p>
+<h3>3.1 Document / story quality (A–G)</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Rubric</th>
+<th>Typical fail</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>missing-who-why</code></td>
+<td>A</td>
+<td>“CS wants a dashboard”</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>missing-what</code></td>
+<td>B</td>
+<td>Feature dump, no outcome</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>missing-constraints</code></td>
+<td>C</td>
+<td>Silent PII / vendor / SLA</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>missing-ac</code></td>
+<td>D</td>
+<td>Empty AC field</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>ac-not-observable</code></td>
+<td>D</td>
+<td>“Must be nice / fast”</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>verbal-ac</code></td>
+<td>D</td>
+<td>Said in Meet, not on ticket <a href="../03.edges/32.edge-meeting-verbal-ac.html">32</a></td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>too-much-how</code></td>
+<td>D</td>
+<td>AC is implementation <a href="../03.edges/33.edge-ac-is-how.html">33</a></td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>missing-oos</code></td>
+<td>E</td>
+<td>Everything implied in</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>missing-deps</code></td>
+<td>F</td>
+<td>“Fraud will help”, no needed-by</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>no-needed-by</code></td>
+<td>F</td>
+<td>Dep named, date missing</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>circular-dep</code></td>
+<td>F</td>
+<td>A blocks B blocks A</td>
+<td><code>REWORK</code> or <code>TRADEOFF</code></td>
+</tr>
+<tr>
+<td><code>missing-context</code></td>
+<td>G</td>
+<td>“See Slack thread”</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>no-sample-data</code></td>
+<td>G</td>
+<td>Analytics with no row / screenshot</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>thin-signal</code></td>
+<td>G</td>
+<td>80 pages, 2 pages of AC <a href="../03.edges/31.edge-huge-doc-thin-signal.html">31</a></td>
+<td><code>REWORK</code> (slice-only)</td>
+</tr>
+<tr>
+<td><code>uncited-claim</code></td>
+<td>D/G</td>
+<td>AC not in sources <a href="../03.edges/38.edge-ai-hallucinated-ac.html">38</a></td>
+<td><code>REWORK</code> + <strong>never auto</strong></td>
+</tr>
+<tr>
+<td><code>stale-source</code></td>
+<td>G</td>
+<td>Paste older than Drive <a href="../03.edges/40.edge-stale-paste-vs-drive.html">40</a></td>
+<td><code>REWORK</code> or <code>CONFLICT</code></td>
+</tr>
+<tr>
+<td><code>stale-paste</code></td>
+<td>G</td>
+<td>Chat paste vs canonical URL</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>filename-chaos</code></td>
+<td>G</td>
+<td><code>final_v3_REAL</code> <a href="../03.edges/37.edge-filename-version-chaos.html">37</a></td>
+<td><code>REWORK</code></td>
+</tr>
+</tbody></table>
+<h3>3.2 Jira shape</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Fail</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>wrong-layer</code></td>
+<td>Feature with Gherkin / story as epic <a href="./08.rubric-jira.html">08</a></td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>story-too-big</code></td>
+<td>&gt; one sprint, no independent AC <a href="../03.edges/34.edge-epic-as-one-story.html">34</a></td>
+<td><code>REWORK</code> (split, not “PM write it”)</td>
+</tr>
+<tr>
+<td><code>no-gherkin</code></td>
+<td>Story without Given/When/Then</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>orphan-subtask</code></td>
+<td>Subtask with own AC or two pods <a href="../03.edges/35.edge-subtask-two-pods.html">35</a></td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>no-owner</code></td>
+<td>No reporter / BA / accepting dept</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>priority-unscored</code></td>
+<td>Empty RICE / no WSJF when the org uses it</td>
+<td><code>REWORK</code> or <code>TRADEOFF</code></td>
+</tr>
+<tr>
+<td><code>cross-pod</code></td>
+<td>One Ready item, two how-owners</td>
+<td><code>REWORK</code> or <code>TRADEOFF</code></td>
+</tr>
+<tr>
+<td><code>delivery-mismatch</code></td>
+<td>Git branch / CI ≠ Jira key <a href="../03.edges/41.edge-jira-git-key-mismatch.html">41</a></td>
+<td><code>REWORK</code> (in-flight)</td>
+</tr>
+</tbody></table>
+<h3>3.3 Analytics / ML / data (this shop)</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Fail</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>missing-data-contract</code></td>
+<td>No grain, key, freshness, late-arriving rule</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>missing-nfr</code></td>
+<td>No SLO, volume, latency, error budget</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>missing-observability</code></td>
+<td>No metric / log / job to <strong>prove</strong> D</td>
+<td><code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>no-eval-set</code></td>
+<td>Model / score with no holdout or labeled sample</td>
+<td><code>SPIKE</code> or <code>REWORK</code></td>
+</tr>
+<tr>
+<td><code>model-risk</code></td>
+<td>First-of-kind ML in a payments/fraud path</td>
+<td>Exception — <code>pm</code> even if A–G looks green</td>
+</tr>
+<tr>
+<td><code>env-missing</code></td>
+<td>No replica / staging / test tenant</td>
+<td><code>REWORK</code> or <code>BLOCKED_EXT</code></td>
+</tr>
+<tr>
+<td><code>access-blocked</code></td>
+<td>Pod cannot see the system (401/ACL)</td>
+<td><code>BLOCKED_EXT</code> or <code>REWORK</code> to sender for access</td>
+</tr>
+<tr>
+<td><code>irreversible</code></td>
+<td>Hard delete, prod backfill, schema break</td>
+<td>Exception — <code>pm</code> always</td>
+</tr>
+</tbody></table>
+<h3>3.4 Safety / legal</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Fail</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>unreadable</code></td>
+<td>OCR soup <a href="../03.edges/30.edge-unreadable-ocr.html">30</a></td>
+<td><code>QUARANTINE</code></td>
+</tr>
+<tr>
+<td><code>pii-hit</code></td>
+<td>Phone, email, national id in payload <a href="../03.edges/36.edge-pii-quarantine.html">36</a></td>
+<td><code>QUARANTINE</code></td>
+</tr>
+<tr>
+<td><code>secret-leak</code></td>
+<td>Token, connection string</td>
+<td><code>QUARANTINE</code></td>
+</tr>
+<tr>
+<td><code>sql-prod</code></td>
+<td>Write or <code>SELECT *</code> on prod <a href="../03.edges/42.edge-sql-prod-write.html">42</a></td>
+<td><code>REJECT</code> the <strong>action</strong>, not the question</td>
+</tr>
+<tr>
+<td><code>policy-bypass</code></td>
+<td>Ready outside policy <a href="../03.edges/39.edge-auto-move-without-pm.html">39</a></td>
+<td>Overturn + audit — not a sender fix</td>
+</tr>
+</tbody></table>
+<h3>3.5 Portfolio / commercial / flow</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Fail</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>scope-gap</code></td>
+<td>SoW clause with no epic <a href="../02.cases/20.case-sow-assessment-vs-backlog.html">20</a></td>
+<td><code>TRADEOFF</code> (add / descope / change SoW)</td>
+</tr>
+<tr>
+<td><code>scope-creep</code></td>
+<td>Tickets not in SoW</td>
+<td><code>CHANGE</code> or <code>DEFER</code></td>
+</tr>
+<tr>
+<td><code>out-of-contract</code></td>
+<td>Ask is not funded</td>
+<td><code>DEFER</code> or <code>REJECT</code></td>
+</tr>
+<tr>
+<td><code>unfunded</code></td>
+<td>No budget / no vendor hours</td>
+<td><code>DEFER</code></td>
+</tr>
+<tr>
+<td><code>wip-exceeded</code></td>
+<td>Pod already at WIP</td>
+<td><code>DEFER</code></td>
+</tr>
+<tr>
+<td><code>sprint-goal-conflict</code></td>
+<td>Ask fights the goal</td>
+<td><code>CHANGE</code> or <code>DEFER</code></td>
+</tr>
+<tr>
+<td><code>vendor-wait</code></td>
+<td>Waiting vendor/IT, quality already OK</td>
+<td><code>BLOCKED_EXT</code></td>
+</tr>
+<tr>
+<td><code>design-drift</code></td>
+<td>Figma newer than ticket <a href="../02.cases/13.case-figma-ticket-drift.html">13</a></td>
+<td><code>CONFLICT</code></td>
+</tr>
+<tr>
+<td><code>first-of-kind</code></td>
+<td>Template type unknown</td>
+<td>Exception — <code>pm</code></td>
+</tr>
+<tr>
+<td><code>untrusted-author</code></td>
+<td>New dept / dropped from ladder <a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a></td>
+<td>Exception — <code>pm</code></td>
+</tr>
+<tr>
+<td><code>silent-sender</code></td>
+<td>SLA miss on Needs_AC</td>
+<td>Exception — <code>pm</code></td>
+</tr>
+<tr>
+<td><code>dispute</code></td>
+<td>Sender vs pod on the same AC</td>
+<td>Exception — <code>pm</code></td>
+</tr>
+<tr>
+<td><code>bounce-from-pod</code></td>
+<td>Pulled Ready, cannot execute <a href="../03.edges/45.edge-pod-bounce-to-sender.html">45</a></td>
+<td><code>REWORK</code> to <strong>sender</strong></td>
+</tr>
+<tr>
+<td><code>done-not-done</code></td>
+<td>Done, no evidence <a href="../02.cases/21.case-dod-evidence.html">21</a></td>
+<td><code>DONE_FAIL</code></td>
+</tr>
+<tr>
+<td><code>p0-sev</code></td>
+<td>Live breakage</td>
+<td><code>INCIDENT</code></td>
+</tr>
+</tbody></table>
+<p>Do <strong>not</strong> invent free-text codes in production. If a new failure repeats twice, add it here in a retro — that is how the vocabulary stays a SoT.</p>
+<h2>4. Elite scenarios (what 06 used to miss)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Real situation</th>
+<th>Class</th>
+<th>Codes</th>
+<th>Commit</th>
+<th>Who</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Trusted BA, daily digest template, A–G green, conf ≥ 0.85</td>
+<td><code>VERIFIED</code></td>
+<td>—</td>
+<td><code>auto</code></td>
+<td>Pod <strong>pulls</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>CS ping “dashboard tomorrow”, no AC</td>
+<td><code>REWORK</code></td>
+<td><code>missing-ac</code> <code>missing-who-why</code></td>
+<td><code>sender-bounce</code></td>
+<td>CS, not TDM</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Same, but sprint already full</td>
+<td><code>CHANGE</code> or <code>DEFER</code></td>
+<td><code>sprint-goal-conflict</code> <code>wip-exceeded</code></td>
+<td><code>pm</code> if they want a <strong>swap</strong></td>
+<td>Lead if CS vs Fraud</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Meet said “make it realtime”; ticket AC empty</td>
+<td><code>REWORK</code></td>
+<td><code>verbal-ac</code></td>
+<td><code>sender-bounce</code></td>
+<td><a href="../02.cases/12.case-meet-to-ready.html">12</a> <a href="../03.edges/32.edge-meeting-verbal-ac.html">32</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td>AC is “use Kafka + Flink”</td>
+<td><code>REWORK</code></td>
+<td><code>too-much-how</code></td>
+<td><code>sender-bounce</code></td>
+<td>Outcome stays; how is advice</td>
+</tr>
+<tr>
+<td>6</td>
+<td>One story = whole pipeline</td>
+<td><code>REWORK</code></td>
+<td><code>story-too-big</code></td>
+<td><code>sender-bounce</code></td>
+<td>BA splits</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Subtask assigned to two pods</td>
+<td><code>REWORK</code></td>
+<td><code>orphan-subtask</code> <code>cross-pod</code></td>
+<td><code>sender-bounce</code></td>
+<td><a href="../03.edges/35.edge-subtask-two-pods.html">35</a></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Figma frame newer than Jira AC</td>
+<td><code>CONFLICT</code></td>
+<td><code>design-drift</code></td>
+<td><code>pm</code></td>
+<td>Human picks SoT <a href="../02.cases/13.case-figma-ticket-drift.html">13</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Drive PRD vs Confluence ADR disagree</td>
+<td><code>CONFLICT</code></td>
+<td><code>stale-source</code></td>
+<td><code>pm</code></td>
+<td><a href="../02.cases/14.case-sot-conflict.html">14</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Chat paste older than Drive</td>
+<td><code>REWORK</code></td>
+<td><code>stale-paste</code> <code>stale-source</code></td>
+<td><code>sender-bounce</code></td>
+<td>Fetch canonical <a href="../03.edges/40.edge-stale-paste-vs-drive.html">40</a></td>
+</tr>
+<tr>
+<td>11</td>
+<td>CSV with phones in a column</td>
+<td><code>QUARANTINE</code></td>
+<td><code>pii-hit</code></td>
+<td><code>security</code></td>
+<td><a href="../03.edges/36.edge-pii-quarantine.html">36</a></td>
+</tr>
+<tr>
+<td>12</td>
+<td>Scan of a contract, OCR garbage</td>
+<td><code>QUARANTINE</code></td>
+<td><code>unreadable</code></td>
+<td><code>security</code></td>
+<td>Native file <a href="../03.edges/30.edge-unreadable-ocr.html">30</a></td>
+</tr>
+<tr>
+<td>13</td>
+<td>Model invents Given/When/Then</td>
+<td><code>REWORK</code></td>
+<td><code>uncited-claim</code></td>
+<td><code>pm</code> (never auto)</td>
+<td><a href="../03.edges/38.edge-ai-hallucinated-ac.html">38</a></td>
+</tr>
+<tr>
+<td>14</td>
+<td>80-page SoW, 2 pages of signal</td>
+<td><code>REWORK</code></td>
+<td><code>thin-signal</code></td>
+<td><code>sender-bounce</code></td>
+<td>Verify <strong>slices</strong>, not the file <a href="../03.edges/31.edge-huge-doc-thin-signal.html">31</a></td>
+</tr>
+<tr>
+<td>15</td>
+<td>SoW clause with no epic</td>
+<td><code>TRADEOFF</code></td>
+<td><code>scope-gap</code></td>
+<td><code>pm</code></td>
+<td>Head: add / descope / change SoW <a href="../02.cases/20.case-sow-assessment-vs-backlog.html">20</a></td>
+</tr>
+<tr>
+<td>16</td>
+<td>Tickets exist that SoW never bought</td>
+<td><code>DEFER</code> or <code>CHANGE</code></td>
+<td><code>scope-creep</code> <code>out-of-contract</code></td>
+<td><code>pm</code></td>
+<td>Commercial, not a pod fight</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Fraud vs CS both “P0” this sprint</td>
+<td><code>TRADEOFF</code></td>
+<td><code>priority-unscored</code></td>
+<td><code>pm</code></td>
+<td>Lead. AI does not rank depts</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Story green, Fraud mapping due next week</td>
+<td><code>VERIFIED</code> then <code>BLOCKED_EXT</code> when date slips</td>
+<td><code>vendor-wait</code> or dep key</td>
+<td><code>auto</code> then status honesty</td>
+<td><a href="../02.cases/17.case-dependency-blocked.html">17</a> <a href="../03.edges/44.edge-ready-externally-blocked.html">44</a></td>
+</tr>
+<tr>
+<td>19</td>
+<td>Dep named, no date</td>
+<td><code>REWORK</code></td>
+<td><code>missing-deps</code> <code>no-needed-by</code></td>
+<td><code>sender-bounce</code></td>
+<td>Do not silent-Blocked</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Pod pulls auto-Ready, sample missing</td>
+<td><code>REWORK</code></td>
+<td><code>bounce-from-pod</code> <code>no-sample-data</code></td>
+<td><code>pod-bounce</code></td>
+<td><strong>Sender</strong>, not TDM inbox <a href="../03.edges/45.edge-pod-bounce-to-sender.html">45</a></td>
+</tr>
+<tr>
+<td>21</td>
+<td>Sender silent 48h</td>
+<td>still <code>REWORK</code></td>
+<td><code>silent-sender</code></td>
+<td><code>pm</code></td>
+<td>Exception queue — 30-min sharpen or reject</td>
+</tr>
+<tr>
+<td>22</td>
+<td>Sender vs pod dispute the AC</td>
+<td><code>REWORK</code></td>
+<td><code>dispute</code></td>
+<td><code>pm</code></td>
+<td>Judgment, then write the SoT</td>
+</tr>
+<tr>
+<td>23</td>
+<td>Third bounce on the same key</td>
+<td><code>REWORK</code></td>
+<td><code>bounce-from-pod</code></td>
+<td><code>pm</code></td>
+<td>Process broken — rubric or author ladder</td>
+</tr>
+<tr>
+<td>24</td>
+<td>“Tiny ask” mid-sprint, not breakage</td>
+<td><code>DEFER</code></td>
+<td><code>sprint-goal-conflict</code></td>
+<td><code>park</code></td>
+<td>Next planning <a href="../02.cases/18.case-mid-sprint-change.html">18</a></td>
+</tr>
+<tr>
+<td>25</td>
+<td>Payments/fraud <strong>live</strong> breakage</td>
+<td><code>INCIDENT</code></td>
+<td><code>p0-sev</code></td>
+<td><code>incident</code></td>
+<td>War room. Do <strong>not</strong> mint a Ready story from the ping</td>
+</tr>
+<tr>
+<td>26</td>
+<td>After incident, leftover hardening</td>
+<td><code>CHANGE</code> or <code>SPIKE</code></td>
+<td><code>first-of-kind</code> <code>missing-nfr</code></td>
+<td><code>pm</code></td>
+<td>Swap or spike — still not silent insert</td>
+</tr>
+<tr>
+<td>27</td>
+<td>Score model, no labeled holdout</td>
+<td><code>SPIKE</code></td>
+<td><code>no-eval-set</code> <code>model-risk</code></td>
+<td><code>spike</code></td>
+<td>Timebox; Ready only after eval exists</td>
+</tr>
+<tr>
+<td>28</td>
+<td>Report: grain and freshness unspecified</td>
+<td><code>REWORK</code></td>
+<td><code>missing-data-contract</code></td>
+<td><code>sender-bounce</code></td>
+<td><a href="../02.cases/19.case-data-sql-excel-report.html">19</a></td>
+</tr>
+<tr>
+<td>29</td>
+<td>Ask to <code>UPDATE</code> prod</td>
+<td><code>REJECT</code> the write</td>
+<td><code>sql-prod</code></td>
+<td>—</td>
+<td>Replica only <a href="../03.edges/42.edge-sql-prod-write.html">42</a></td>
+</tr>
+<tr>
+<td>30</td>
+<td>Hard-delete / irreversible backfill</td>
+<td><code>VERIFIED</code> quality may pass</td>
+<td><code>irreversible</code></td>
+<td><code>pm</code> <strong>always</strong></td>
+<td>Exception flag, not auto</td>
+</tr>
+<tr>
+<td>31</td>
+<td>New author, first ticket, looks green</td>
+<td><code>VERIFIED</code></td>
+<td><code>untrusted-author</code> <code>first-of-kind</code></td>
+<td><code>pm</code></td>
+<td>Phase 0 / calibrate <a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a></td>
+</tr>
+<tr>
+<td>32</td>
+<td>Duplicate Slack dump of OA-123</td>
+<td><code>DUPLICATE</code></td>
+<td>—</td>
+<td>link + close</td>
+<td>Do not <code>REJECT</code> into a black hole</td>
+</tr>
+<tr>
+<td>33</td>
+<td>Valid, unfunded, next quarter OK</td>
+<td><code>DEFER</code></td>
+<td><code>unfunded</code> <code>wip-exceeded</code></td>
+<td><code>park</code></td>
+<td>No fake REWORK SLA</td>
+</tr>
+<tr>
+<td>34</td>
+<td>Pod WIP = 3, fourth green story</td>
+<td><code>DEFER</code></td>
+<td><code>wip-exceeded</code></td>
+<td><code>park</code></td>
+<td>Ready is not a start gun if WIP is law</td>
+</tr>
+<tr>
+<td>35</td>
+<td>Jira Done, CI red, no screenshot</td>
+<td><code>DONE_FAIL</code></td>
+<td><code>done-not-done</code> <code>delivery-mismatch</code></td>
+<td><code>reopen</code></td>
+<td><a href="../02.cases/21.case-dod-evidence.html">21</a> <a href="../02.cases/15.case-pr-ci-vs-ticket.html">15</a></td>
+</tr>
+<tr>
+<td>36</td>
+<td>AI Ready’d a P0 cross-pod story</td>
+<td>Overturn</td>
+<td><code>policy-bypass</code> <code>cross-pod</code></td>
+<td>audit</td>
+<td><a href="../03.edges/39.edge-auto-move-without-pm.html">39</a></td>
+</tr>
+<tr>
+<td>37</td>
+<td>Batch 200 files, 12 yellow</td>
+<td>mixed</td>
+<td>see <a href="../03.edges/43.edge-batch-classify-exceptions.html">43</a></td>
+<td><code>auto</code> on green, <code>pm</code> on flags</td>
+<td>Do not sample-stamp the pile</td>
+</tr>
+<tr>
+<td>38</td>
+<td>DontPassMessage: hallway dump</td>
+<td>not a class yet</td>
+<td>—</td>
+<td>packet first</td>
+<td><a href="../02.cases/22.case-dontpassmessage.html">22</a> then classify the <strong>packet</strong></td>
+</tr>
+<tr>
+<td>39</td>
+<td>No staging / replica for the metric</td>
+<td><code>REWORK</code> or <code>BLOCKED_EXT</code></td>
+<td><code>env-missing</code></td>
+<td>sender or IT</td>
+<td>Do not Ready a report nobody can prove</td>
+</tr>
+<tr>
+<td>40</td>
+<td>ACL 401 on the source system</td>
+<td><code>BLOCKED_EXT</code></td>
+<td><code>access-blocked</code></td>
+<td>IT / sender</td>
+<td>Honesty on the board</td>
+</tr>
+</tbody></table>
+<h2>5. Drive stages (folders)</h2>
+<pre class="mermaid">flowchart LR
+  I["/intake"] --&gt; C["/classified"]
+  C --&gt; RW["/rework/{reason}"]
+  C --&gt; Q["/quarantine"]
+  C --&gt; PR["/pm-review"]
+  C --&gt; PK["/park"]
+  C --&gt; SK["/spike"]
+  C --&gt; V["/verified auto if policy"]
+  PR --&gt; V
+  PR --&gt; X["/reject"]
+  RW --&gt;|sender fix| I</pre>
+<p><strong>Move into <code>/verified</code>:</strong> auto if A–G + cites + confidence + trusted author and <strong>no</strong> exception flags; else <code>/pm-review</code>.<br><code>DEFER</code> → <code>/park</code> (not <code>/rework</code>). <code>SPIKE</code> → <code>/spike</code>. <code>QUARANTINE</code> never feeds RAG. AI may propose <code>suggested_folder</code> in JSON. RAG ingest <strong>after</strong> <code>/verified</code>.</p>
+<h2>6. Jira stages (statuses or labels)</h2>
+<p>If you cannot change workflow, use labels:</p>
+<p><code>ai:intake</code> <code>ai:needs-ac</code> <code>ai:needs-scope</code> <code>ai:needs-context</code> <code>ai:pm-review</code> <code>ai:ready</code> <code>ai:ready-blocked-ext</code> <code>ai:auto-ready</code> <code>ai:defer</code> <code>ai:spike</code> <code>ai:change</code> <code>ai:tradeoff</code> <code>ai:incident</code> <code>ai:duplicate</code> <code>ai:done-fail</code> <code>ai:quarantine</code></p>
+<p>Preferred statuses:</p>
+<pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Intake
+  Intake --&gt; Needs_AC: REWORK assign sender
+  Intake --&gt; Needs_Scope
+  Intake --&gt; Needs_Context
+  Intake --&gt; Spike
+  Intake --&gt; Parked: DEFER
+  Intake --&gt; Ready: auto-Ready policy
+  Intake --&gt; PM_Review: exception
+  Intake --&gt; Incident: live Sev
+  Needs_AC --&gt; Intake: sender fixed, re-score
+  Needs_AC --&gt; Ready: auto after re-score
+  Needs_AC --&gt; PM_Review: bounce≥2 / dispute / SLA miss
+  Spike --&gt; Ready: eval/design exists
+  Spike --&gt; Parked: spike expired
+  Parked --&gt; Intake: date / WIP opens
+  PM_Review --&gt; Ready
+  PM_Review --&gt; Needs_AC: bounce to sender
+  PM_Review --&gt; Parked
+  Ready --&gt; Blocked: external dep
+  Ready --&gt; InProgress: pod pull
+  InProgress --&gt; Needs_AC: pod-bounce to sender
+  InProgress --&gt; Done: evidence
+  Done --&gt; InProgress: DONE_FAIL reopen</pre>
+<p>AI <strong>never</strong> sets In Progress or Done (<a href="./01.operating-model.html">01</a>).</p>
+<h2>7. Who acts after classify</h2>
+<table>
+<thead>
+<tr>
+<th>Class / signal</th>
+<th>Actor</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>VERIFIED</code> + policy</td>
+<td>AI apply job</td>
+<td>Ready / <code>/verified</code> + audit <code>path=auto</code></td>
+</tr>
+<tr>
+<td><code>REWORK</code></td>
+<td><strong>Sender</strong></td>
+<td>Fix codes; SLA 24–48h; TDM not assignee</td>
+</tr>
+<tr>
+<td><code>DUPLICATE</code></td>
+<td>AI or BA</td>
+<td>Link canonical, close</td>
+</tr>
+<tr>
+<td><code>DEFER</code></td>
+<td>AI label + PM if they protest</td>
+<td><code>/park</code> / Parked — <strong>no</strong> 24h SLA</td>
+</tr>
+<tr>
+<td><code>SPIKE</code></td>
+<td>Pod / BA</td>
+<td>Timebox; exit criteria on the ticket</td>
+</tr>
+<tr>
+<td><code>CHANGE</code></td>
+<td>PM (+ Lead if swap)</td>
+<td>Swap equal or wait <a href="../02.cases/18.case-mid-sprint-change.html">18</a></td>
+</tr>
+<tr>
+<td><code>TRADEOFF</code></td>
+<td><strong>Lead + PM</strong></td>
+<td>One P0 this sprint</td>
+</tr>
+<tr>
+<td><code>INCIDENT</code></td>
+<td>On-call + pod</td>
+<td>Stabilize; ticket later</td>
+</tr>
+<tr>
+<td><code>CONFLICT</code> / <code>QUARANTINE</code> / exception list in <a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a></td>
+<td><strong>PM</strong> (+ Security)</td>
+<td>Stamp, reject, quarantine, or 30-min sharpen</td>
+</tr>
+<tr>
+<td><code>BLOCKED_EXT</code></td>
+<td>TDM status honesty</td>
+<td>Blocked / At Risk — AC stays Ready-quality <a href="../03.edges/44.edge-ready-externally-blocked.html">44</a></td>
+</tr>
+<tr>
+<td><code>DONE_FAIL</code></td>
+<td><strong>Pod</strong></td>
+<td>Evidence or reopen <a href="../02.cases/21.case-dod-evidence.html">21</a></td>
+</tr>
+<tr>
+<td>Sample of greens</td>
+<td><strong>PM</strong></td>
+<td>Weekly audit, not a queue</td>
+</tr>
+<tr>
+<td>Pod cannot execute</td>
+<td><strong>Pod → sender</strong></td>
+<td><a href="../03.edges/45.edge-pod-bounce-to-sender.html">45</a></td>
+</tr>
+</tbody></table>
+<h2>8. PM check — where and how (exceptions only)</h2>
+<table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Where you look</th>
+<th>Approve action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Document</td>
+<td>Cursor verdict + <code>/pm-review</code></td>
+<td>Comment <code>PM-OK {date}</code> + move <code>/verified</code></td>
+</tr>
+<tr>
+<td>Jira exception</td>
+<td>Ticket + AI JSON</td>
+<td>Transition <code>PM_Review → Ready</code> <strong>you click</strong></td>
+</tr>
+<tr>
+<td>Auto-Ready log</td>
+<td>Audit table</td>
+<td>Overturn + drop author from trusted if needed</td>
+</tr>
+<tr>
+<td>MoM</td>
+<td>Notion/Confluence draft</td>
+<td>Publish + link on tickets</td>
+</tr>
+<tr>
+<td>Status pack</td>
+<td>Markdown draft</td>
+<td>You send to leads</td>
+</tr>
+<tr>
+<td>Trade-off / SoW</td>
+<td>Diff + Head</td>
+<td>Descope, add epic, or change contract</td>
+</tr>
+<tr>
+<td>Incident</td>
+<td>War-room notes</td>
+<td>Do not launder into auto-Ready</td>
+</tr>
+</tbody></table>
+<h2>9. JSON envelope (every classifier)</h2>
+<div class="code-panel" data-lang="json"><div class="code-panel-header"><span class="code-lang">JSON</span><button type="button" class="code-copy" data-copy>Copy</button></div><div class="code-panel-body"><div class="code-lines" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span></div><pre class="code-pre"><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;artifact_id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;drive:abc / OA-123&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;requirement | story | epic | mom | pr | report | ping | sow | incident | spike&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;layer&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;feature | epic | story | subtask | none&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;class&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;REWORK&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;reason_codes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;missing-oos&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;ac-not-observable&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;citations&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;system&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;drive&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;loc&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;p.2&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;suggested_next&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/rework/missing-oos&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;commit_path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auto | pm | sender-bounce | pod-bounce | park | spike | incident | reopen | security&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;assignee_next&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;sender | pm | pod | lead | security | none&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;pm_action&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;none | approve | bounce | quarantine | park | swap | escalate&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;confidence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.0</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;trusted_author&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;exception_flags&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;bounce_count&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;needed_by&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;cockpit&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;cursor | claude&quot;</span>
+<span class="hljs-punctuation">}</span></code></pre></div></div><p><code>exception_flags</code> closed: <code>p0</code> <code>cross-pod</code> <code>pii</code> <code>conflict</code> <code>first-of-kind</code> <code>untrusted-author</code> <code>sow-gap</code> <code>irreversible</code> <code>model-risk</code>.</p>
+<p>Low confidence (&lt;0.6) → always <code>pm</code>, never auto. Auto-Ready still needs ≥ 0.85 + trusted author + template type + no flags (<a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a>).</p>
+<h2>10. Human-in-the-loop sequence</h2>
+<pre class="mermaid">sequenceDiagram
+  participant AI
+  participant Board as Jira/Drive
+  participant S as Sender
+  participant PM
+  participant Pod
+  participant Lead
+
+  AI-&gt;&gt;Board: classify JSON
+  alt VERIFIED + policy
+    AI-&gt;&gt;Board: auto Ready / /verified
+    Pod-&gt;&gt;Board: pull
+  else REWORK
+    AI-&gt;&gt;Board: Needs_AC + assign sender
+    Board-&gt;&gt;S: reason codes + SLA
+  else DEFER or SPIKE
+    AI-&gt;&gt;Board: Parked or Spike
+  else INCIDENT
+    AI-&gt;&gt;Board: label incident
+    Note over PM,Pod: war room — not DoR
+  else TRADEOFF or CHANGE swap or CONFLICT or exception
+    AI-&gt;&gt;Board: ai:pm-review
+    PM-&gt;&gt;Lead: if two depts
+    PM-&gt;&gt;Board: Ready or bounce or park
+  end</pre>
+<p>AI <strong>does not</strong> Ready outside policy. Unauthorized = <a href="../03.edges/39.edge-auto-move-without-pm.html">39</a>. Policy auto-Ready = <a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a>.</p>
+<h2>Related</h2>
+<ul>
+<li>Document rubric: <a href="./07.rubric-document.html">07</a></li>
+<li>Jira rubric: <a href="./08.rubric-jira.html">08</a></li>
+<li>Auto vs exception: <a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a></li>
+<li>Security: <a href="./09.security-pii-governance.html">09</a></li>
+<li>Operating law: <a href="./01.operating-model.html">01</a></li>
+<li>PMBOK 8 mapping: <a href="../01.pmp-phase-mapping.html">01</a></li>
+</ul>
+<h3>Class homes (every class has a pipeline or edge)</h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Home</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>VERIFIED</code></td>
+<td><a href="../02.cases/10.case-document-intake-verify.html">10</a> <a href="../02.cases/11.case-jira-hierarchy-quality.html">11</a> <a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a></td>
+</tr>
+<tr>
+<td><code>REWORK</code></td>
+<td><a href="../02.cases/10.case-document-intake-verify.html">10</a> <a href="../02.cases/11.case-jira-hierarchy-quality.html">11</a> <a href="../03.edges/45.edge-pod-bounce-to-sender.html">45</a> <a href="../03.edges/52.edge-silent-sender-dispute.html">52</a></td>
+</tr>
+<tr>
+<td><code>SPIKE</code></td>
+<td><a href="../02.cases/25.case-spike-timebox.html">25</a></td>
+</tr>
+<tr>
+<td><code>REJECT</code></td>
+<td><a href="../03.edges/48.edge-reject-wrong-artifact.html">48</a> <a href="../03.edges/42.edge-sql-prod-write.html">42</a> (action)</td>
+</tr>
+<tr>
+<td><code>DUPLICATE</code></td>
+<td><a href="../03.edges/46.edge-duplicate-ask.html">46</a></td>
+</tr>
+<tr>
+<td><code>QUARANTINE</code></td>
+<td><a href="../03.edges/30.edge-unreadable-ocr.html">30</a> <a href="../03.edges/36.edge-pii-quarantine.html">36</a> <a href="../03.edges/49.edge-secret-leak.html">49</a></td>
+</tr>
+<tr>
+<td><code>CONFLICT</code></td>
+<td><a href="../02.cases/13.case-figma-ticket-drift.html">13</a> <a href="../02.cases/14.case-sot-conflict.html">14</a> <a href="../03.edges/37.edge-filename-version-chaos.html">37</a></td>
+</tr>
+<tr>
+<td><code>DEFER</code></td>
+<td><a href="../03.edges/47.edge-defer-wip-unfunded.html">47</a> <a href="../02.cases/18.case-mid-sprint-change.html">18</a></td>
+</tr>
+<tr>
+<td><code>CHANGE</code></td>
+<td><a href="../02.cases/18.case-mid-sprint-change.html">18</a></td>
+</tr>
+<tr>
+<td><code>TRADEOFF</code></td>
+<td><a href="../02.cases/26.case-dept-tradeoff.html">26</a> <a href="../02.cases/20.case-sow-assessment-vs-backlog.html">20</a></td>
+</tr>
+<tr>
+<td><code>INCIDENT</code></td>
+<td><a href="../02.cases/27.case-incident-not-story.html">27</a></td>
+</tr>
+<tr>
+<td><code>BLOCKED_EXT</code></td>
+<td><a href="../02.cases/17.case-dependency-blocked.html">17</a> <a href="../03.edges/44.edge-ready-externally-blocked.html">44</a> <a href="../03.edges/50.edge-env-access-blocked.html">50</a></td>
+</tr>
+<tr>
+<td><code>DONE_FAIL</code></td>
+<td><a href="../02.cases/21.case-dod-evidence.html">21</a> <a href="../02.cases/15.case-pr-ci-vs-ticket.html">15</a></td>
+</tr>
+</tbody></table>
+</article></main>
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            // Match Cursor / VS Code Markdown preview (dark workbench → mermaid "dark")
+            theme: 'dark',
+            securityLevel: 'loose',
+            flowchart: {
+                htmlLabels: true,
+                curve: 'basis',
+                useMaxWidth: true,
+                padding: 16,
+                nodeSpacing: 24,
+                rankSpacing: 48,
+                diagramPadding: 12
+            },
+            sequence: { useMaxWidth: false, diagramMarginX: 40, diagramMarginY: 20, actorMargin: 50, boxMargin: 10 },
+            er: { useMaxWidth: false },
+            gantt: { useMaxWidth: false },
+            journey: { useMaxWidth: false },
+            timeline: { useMaxWidth: false },
+            class: { useMaxWidth: false },
+            state: { useMaxWidth: false },
+            pie: { useMaxWidth: false },
+            mindmap: { useMaxWidth: false }
+        });
+
+        async function renderMermaid() {
+            const nodes = [...document.querySelectorAll('pre.mermaid')];
+            for (const el of nodes) {
+                const code = (el.textContent || '').trim();
+                if (!code) continue;
+                try {
+                    const id = 'mmd-' + Math.random().toString(36).slice(2);
+                    const { svg } = await mermaid.render(id, code);
+
+                    const stage = document.createElement('div');
+                    stage.className = 'mermaid-stage';
+
+                    const toolbar = document.createElement('div');
+                    toolbar.className = 'mermaid-toolbar';
+                    toolbar.innerHTML = [
+                        '<button type="button" data-act="zoom-out" title="Zoom out">−</button>',
+                        '<input class="zoom-input" type="number" min="5" max="500" step="5" value="100" title="Type zoom % then Enter" aria-label="Zoom percent">',
+                        '<span class="zoom-suffix">%</span>',
+                        '<button type="button" data-act="zoom-in" title="Zoom in">+</button>',
+                        '<button type="button" data-act="reset" title="Reset view">⟲</button>',
+                        '<button type="button" data-act="fullscreen" title="Fullscreen">⛶</button>'
+                    ].join('');
+
+                    const hint = document.createElement('div');
+                    hint.className = 'mermaid-hint';
+                    hint.textContent = 'Scroll zoom · Drag pan · Type % · ⛶ fullscreen';
+
+                    const viewport = document.createElement('div');
+                    viewport.className = 'mermaid-viewport';
+
+                    const wrap = document.createElement('div');
+                    wrap.className = 'mermaid';
+                    wrap.innerHTML = svg;
+                    const svgEl = wrap.querySelector('svg');
+                    if (svgEl) {
+                        svgEl.removeAttribute('height');
+                        svgEl.setAttribute('width', '100%');
+                        svgEl.style.maxWidth = '100%';
+                        svgEl.style.width = '100%';
+                        svgEl.style.height = 'auto';
+                    }
+
+                    viewport.appendChild(wrap);
+                    stage.appendChild(toolbar);
+                    stage.appendChild(hint);
+                    stage.appendChild(viewport);
+                    el.replaceWith(stage);
+
+                    const pz = Panzoom(wrap, {
+                        maxScale: 5,
+                        minScale: 0.05,
+                        // No contain — free zoom/pan (contain:'outside' locked min by diagram size)
+                        cursor: 'grab'
+                    });
+                    viewport.addEventListener('wheel', pz.zoomWithWheel);
+                    const zoomInput = toolbar.querySelector('.zoom-input');
+                    let syncing = false;
+                    const syncZoom = () => {
+                        if (!zoomInput || syncing) return;
+                        syncing = true;
+                        zoomInput.value = String(Math.round(pz.getScale() * 100));
+                        syncing = false;
+                    };
+                    const fitView = () => {
+                        const svg = wrap.querySelector('svg');
+                        if (!svg) return;
+                        pz.reset({ animate: false });
+                        // Fullscreen: fit both axes. Inline: keep width 100% (Markdown-preview style).
+                        if (!stage.classList.contains('is-fullscreen')) {
+                            syncZoom();
+                            return;
+                        }
+                        const bbox = svg.getBBox();
+                        const pad = 72;
+                        const sx = (viewport.clientWidth - pad) / Math.max(bbox.width, 1);
+                        const sy = (viewport.clientHeight - pad) / Math.max(bbox.height, 1);
+                        const scale = Math.max(0.05, Math.min(sx, sy, 1));
+                        pz.zoom(scale, { animate: false });
+                        requestAnimationFrame(() => {
+                            const wr = wrap.getBoundingClientRect();
+                            const vr = viewport.getBoundingClientRect();
+                            const pan = pz.getPan();
+                            pz.pan(
+                                pan.x + (vr.left + vr.width / 2) - (wr.left + wr.width / 2),
+                                pan.y + (vr.top + vr.height / 2) - (wr.top + wr.height / 2),
+                                { animate: false }
+                            );
+                            syncZoom();
+                        });
+                    };
+                    const applyZoomPct = () => {
+                        if (!zoomInput) return;
+                        let pct = Number(zoomInput.value);
+                        if (!Number.isFinite(pct)) pct = 100;
+                        pct = Math.min(500, Math.max(5, Math.round(pct)));
+                        zoomInput.value = String(pct);
+                        pz.zoom(pct / 100, { animate: true });
+                    };
+                    requestAnimationFrame(() => requestAnimationFrame(fitView));
+                    zoomInput.addEventListener('keydown', (ev) => {
+                        if (ev.key === 'Enter') {
+                            ev.preventDefault();
+                            applyZoomPct();
+                            zoomInput.blur();
+                        }
+                        // Don't let panzoom / page steal keys while typing
+                        ev.stopPropagation();
+                    });
+                    zoomInput.addEventListener('change', applyZoomPct);
+                    zoomInput.addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        zoomInput.select();
+                    });
+                    wrap.addEventListener('panzoomchange', syncZoom);
+                    toolbar.addEventListener('click', (ev) => {
+                        const btn = ev.target.closest('button[data-act]');
+                        if (!btn) return;
+                        const act = btn.dataset.act;
+                        if (act === 'zoom-in') pz.zoomIn();
+                        if (act === 'zoom-out') pz.zoomOut();
+                        if (act === 'reset') { fitView(); return; }
+                        if (act === 'fullscreen') {
+                            const on = stage.classList.toggle('is-fullscreen');
+                            btn.title = on ? 'Exit fullscreen (Esc)' : 'Fullscreen';
+                            btn.textContent = on ? '✕' : '⛶';
+                            document.body.style.overflow = on ? 'hidden' : '';
+                            requestAnimationFrame(() => fitView());
+                            return;
+                        }
+                        syncZoom();
+                    });
+                    document.addEventListener('keydown', (ev) => {
+                        if (ev.key === 'Escape' && stage.classList.contains('is-fullscreen')) {
+                            stage.classList.remove('is-fullscreen');
+                            const fsBtn = toolbar.querySelector('[data-act="fullscreen"]');
+                            if (fsBtn) { fsBtn.textContent = '⛶'; fsBtn.title = 'Fullscreen'; }
+                            document.body.style.overflow = '';
+                            requestAnimationFrame(() => fitView());
+                        }
+                    });
+                } catch (err) {
+                    el.classList.add('mermaid-error');
+                    el.textContent = 'Mermaid error: ' + (err && err.message ? err.message : String(err)) + '\n\n' + code;
+                    console.error('Mermaid failed:', err);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await renderMermaid();
+
+            document.querySelectorAll('.code-panel .code-copy').forEach((btn) => {
+                btn.addEventListener('click', async () => {
+                    const panel = btn.closest('.code-panel');
+                    const codeEl = panel?.querySelector('code');
+                    const text = codeEl?.textContent || '';
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        btn.textContent = 'Copied';
+                        btn.classList.add('is-copied');
+                        setTimeout(() => {
+                            btn.textContent = 'Copy';
+                            btn.classList.remove('is-copied');
+                        }, 1400);
+                    } catch {
+                        btn.textContent = 'Failed';
+                        setTimeout(() => { btn.textContent = 'Copy'; }, 1400);
+                    }
+                });
+            });
+
+            const sidebar = document.getElementById('sidebar');
+            const STORAGE_KEY = 'ai-pm-nav-open';
+            const currentUrl = new URL(window.location.href);
+
+            function loadOpenSet() {
+                try { return new Set(JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]')); }
+                catch { return new Set(); }
+            }
+            function saveOpenSet(set) {
+                sessionStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+            }
+
+            let openSet = loadOpenSet();
+
+            function setOpen(folder, open) {
+                const id = folder.dataset.navId;
+                folder.classList.toggle('open', open);
+                folder.querySelector('.folder-toggle')?.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (open) openSet.add(id); else openSet.delete(id);
+                saveOpenSet(openSet);
+            }
+
+            document.querySelectorAll('.nav-folder[data-nav-id]').forEach(folder => {
+                if (openSet.has(folder.dataset.navId)) setOpen(folder, true);
+            });
+
+            document.querySelectorAll('.folder-toggle').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const folder = btn.closest('.nav-folder');
+                    setOpen(folder, !folder.classList.contains('open'));
+                });
+            });
+
+            document.querySelectorAll('.nav-item').forEach(link => {
+                const linkUrl = new URL(link.href);
+                if (currentUrl.pathname === linkUrl.pathname) {
+                    link.classList.add('active');
+                    let parent = link.closest('.nav-folder');
+                    while (parent) {
+                        setOpen(parent, true);
+                        parent = parent.parentElement?.closest('.nav-folder');
+                    }
+                    link.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+            });
+
+            const saved = sessionStorage.getItem('sb-scroll');
+            if (saved) sidebar.scrollTop = parseInt(saved);
+            sidebar.onscroll = () => sessionStorage.setItem('sb-scroll', sidebar.scrollTop);
+        });
+    </script>
+</body>
+</html>

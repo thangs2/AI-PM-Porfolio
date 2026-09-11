@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>39.edge-auto-move-without-pm.md | AI PM Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown-light.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <style>
+        :root { --sidebar-width: 380px; --primary-color: #0969da; --sidebar-bg: #f6f8fa; --border-color: #d0d7de; }
+        body { margin: 0; display: flex; font-family: -apple-system, sans-serif; background: #fff; }
+        #sidebar { width: var(--sidebar-width); height: 100vh; overflow-y: auto; border-right: 1px solid var(--border-color); background: var(--sidebar-bg); padding: 30px 20px; position: fixed; box-sizing: border-box; z-index: 100; }
+        .nav-folder { margin-top: 8px; list-style: none; padding: 0; }
+        .folder-toggle {
+            display: flex; align-items: center; gap: 6px; width: 100%;
+            font-size: 12px; font-weight: 700; color: #656d76; padding: 6px 10px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            background: transparent; border: none; border-radius: 6px; cursor: pointer; text-align: left;
+        }
+        .folder-toggle:hover { background: #ebeff2; color: #1f2328; }
+        .folder-toggle .chevron {
+            display: inline-flex; width: 14px; height: 14px; flex-shrink: 0;
+            transition: transform 0.15s ease; color: #8c959f;
+        }
+        .nav-folder.open > .folder-toggle .chevron { transform: rotate(90deg); }
+        .nav-sub-tree {
+            list-style: none; padding-left: 15px; margin: 2px 0 6px;
+            border-left: 1px solid var(--border-color); display: none;
+        }
+        .nav-folder.open > .nav-sub-tree { display: block; }
+        .nav-item { display: block; padding: 6px 12px; font-size: 13px; color: #1f2328 !important; text-decoration: none !important; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+        .nav-item:hover { background: #ebeff2; }
+        .nav-item.active { background: var(--primary-color) !important; color: #fff !important; font-weight: bold; box-shadow: 0 2px 4px rgba(9, 105, 218, 0.3); }
+        #content { margin-left: var(--sidebar-width); padding: 60px 80px; width: calc(100% - var(--sidebar-width)); box-sizing: border-box; }
+        .markdown-body { max-width: 1100px; margin: 0 auto; }
+        .mermaid-stage {
+            position: relative;
+            margin: 30px 0;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            background: #1e1e1e;
+            overflow: hidden;
+        }
+        .mermaid-stage.is-fullscreen {
+            position: fixed; inset: 0; z-index: 9999; margin: 0; border-radius: 0;
+            border: none; background: #0d1117;
+        }
+        .mermaid-toolbar {
+            position: absolute; top: 10px; right: 10px; z-index: 5;
+            display: flex; gap: 4px; padding: 4px;
+            background: rgba(22, 27, 34, 0.92); border: 1px solid #30363d; border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+        }
+        .mermaid-toolbar button {
+            appearance: none; border: none; cursor: pointer;
+            width: 32px; height: 32px; border-radius: 6px;
+            background: transparent; color: #e6edf3; font-size: 16px; line-height: 1;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .mermaid-toolbar button:hover { background: #30363d; }
+        .mermaid-toolbar .zoom-input {
+            width: 52px; height: 32px; box-sizing: border-box;
+            text-align: center; color: #e6edf3; background: #0d1117;
+            border: 1px solid #30363d; border-radius: 6px;
+            font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+            padding: 0 2px; outline: none;
+        }
+        .mermaid-toolbar .zoom-input:focus { border-color: #58a6ff; }
+        .mermaid-toolbar .zoom-suffix {
+            color: #8b949e; font: 12px/32px ui-monospace, SFMono-Regular, Menlo, monospace;
+            padding-right: 4px; user-select: none;
+        }
+        .mermaid-hint {
+            position: absolute; left: 12px; bottom: 10px; z-index: 5;
+            color: #8b949e; font-size: 11px; pointer-events: none;
+            background: rgba(22, 27, 34, 0.75); padding: 2px 8px; border-radius: 4px;
+        }
+        .mermaid-stage.is-fullscreen .mermaid-hint { display: none; }
+        .mermaid-viewport {
+            height: auto;
+            overflow: auto;
+            cursor: grab;
+            touch-action: none;
+            padding-top: 52px;
+            padding-bottom: 28px;
+        }
+        .mermaid-stage.is-fullscreen .mermaid-viewport {
+            height: 100vh;
+            overflow: hidden;
+        }
+        .mermaid-viewport:active { cursor: grabbing; }
+        .mermaid {
+            background: transparent; border: none; border-radius: 0;
+            padding: 24px; margin: 0; overflow: visible; text-align: center;
+            line-height: normal; color: #e6edf3;
+            width: 100%;
+            min-width: 0;
+            transform-origin: 0 0;
+        }
+        .mermaid svg {
+            max-width: 100% !important;
+            width: 100%;
+            height: auto !important;
+            display: block;
+            vertical-align: middle;
+        }
+        /* Structural only — never force node/label colors (classDef must win) */
+        .mermaid foreignObject div {
+            display: inline-block;
+            white-space: nowrap;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+        /* Soft nested clusters: keep Mermaid dark gray, make it translucent */
+        .mermaid .cluster rect {
+            fill-opacity: 0.45;
+        }
+        .mermaid-error { border-color: #cf222e; background: #fff8f8; color: #82071e; font-family: ui-monospace, Menlo, monospace; font-size: 12px; text-align: left; white-space: pre-wrap; margin: 30px 0; padding: 16px; border: 1px solid; border-radius: 8px; }
+
+        /* IDE-friendly code panels (LLD snippets) */
+        .markdown-body .code-panel {
+            margin: 1.25em 0 1.75em;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            background: #0d1117;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+        }
+        .markdown-body .code-panel-header {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; padding: 8px 12px;
+            background: #161b22; border-bottom: 1px solid #30363d;
+        }
+        .markdown-body .code-lang {
+            font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+            color: #79c0ff; letter-spacing: 0.01em;
+            background: #21262d; border: 1px solid #30363d;
+            border-radius: 999px; padding: 4px 10px;
+            text-transform: none;
+        }
+        .markdown-body .code-copy {
+            appearance: none; cursor: pointer;
+            font: 600 11px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #e6edf3; background: #21262d; border: 1px solid #30363d;
+            border-radius: 6px; padding: 6px 10px;
+        }
+        .markdown-body .code-copy:hover { background: #30363d; border-color: #8b949e; }
+        .markdown-body .code-copy.is-copied {
+            color: #3fb950; border-color: #238636; background: rgba(35, 134, 54, 0.15);
+        }
+        .markdown-body .code-panel-body {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            max-height: min(70vh, 640px);
+            overflow: auto;
+            background: #0d1117;
+        }
+        .markdown-body .code-lines {
+            user-select: none; text-align: right;
+            padding: 14px 0 14px 12px; min-width: 2.5em;
+            border-right: 1px solid #21262d; background: #0d1117;
+            font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            color: #484f58;
+        }
+        .markdown-body .code-lines span { display: block; padding-right: 12px; }
+        .markdown-body .code-pre {
+            margin: 0 !important; padding: 14px 16px !important;
+            background: transparent !important; border: none !important;
+            overflow: visible !important; border-radius: 0 !important;
+        }
+        .markdown-body .code-pre code {
+            display: block; padding: 0 !important; background: transparent !important;
+            font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+            color: #e6edf3; white-space: pre; tab-size: 4;
+        }
+        .markdown-body pre:not(.mermaid):not(.code-pre) {
+            /* fallback plain pre */
+            background: #0d1117; color: #e6edf3; border-radius: 10px; border: 1px solid #30363d;
+        }
+    </style>
+</head>
+<body>
+    <nav id="sidebar">
+        <h1 style="font-size:20px;margin-bottom:20px;font-weight:600;">Le Tat Thang</h1>
+        <ul style="list-style:none;padding:0;margin:0;"><li><a href="../00.index.html" class="nav-item">00. Index</a></li><li><a href="../00.overall-landscape.html" class="nav-item">00. Overall Landscape</a></li><li><a href="../01.pmp-phase-mapping.html" class="nav-item">01. PMP Phase Mapping</a></li><li class="nav-folder" data-nav-id="01.architecture"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>01. Architecture</span></button><ul class="nav-sub-tree"><li><a href="../01.architecture/01.operating-model.html" class="nav-item">01. Operating Model</a></li><li><a href="../01.architecture/02.nucleus-and-parallel-stacks.html" class="nav-item">02. Nucleus And Parallel Stacks</a></li><li><a href="../01.architecture/02b.claude-ai-nucleus.html" class="nav-item">02b. Claude AI Nucleus</a></li><li><a href="../01.architecture/03.mcp-system-map.html" class="nav-item">03. MCP System Map</a></li><li><a href="../01.architecture/04.departments-actors.html" class="nav-item">04. Departments Actors</a></li><li><a href="../01.architecture/05.rag-architecture.html" class="nav-item">05. Rag Architecture</a></li><li><a href="../01.architecture/06.classification-and-pm-gate.html" class="nav-item">06. Classification And Pm Gate</a></li><li><a href="../01.architecture/07.rubric-document.html" class="nav-item">07. Rubric Document</a></li><li><a href="../01.architecture/08.rubric-jira.html" class="nav-item">08. Rubric Jira</a></li><li><a href="../01.architecture/09.security-pii-governance.html" class="nav-item">09. Security PII Governance</a></li></ul></li><li class="nav-folder" data-nav-id="02.cases"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>02. Cases</span></button><ul class="nav-sub-tree"><li><a href="../02.cases/10.case-document-intake-verify.html" class="nav-item">10. Document Intake Verify</a></li><li><a href="../02.cases/11.case-jira-hierarchy-quality.html" class="nav-item">11. Jira Hierarchy Quality</a></li><li><a href="../02.cases/12.case-meet-to-ready.html" class="nav-item">12. Meet To Ready</a></li><li><a href="../02.cases/13.case-figma-ticket-drift.html" class="nav-item">13. Figma Ticket Drift</a></li><li><a href="../02.cases/14.case-sot-conflict.html" class="nav-item">14. SOT Conflict</a></li><li><a href="../02.cases/15.case-pr-ci-vs-ticket.html" class="nav-item">15. PR CI Vs Ticket</a></li><li><a href="../02.cases/16.case-status-pack.html" class="nav-item">16. Status Pack</a></li><li><a href="../02.cases/17.case-dependency-blocked.html" class="nav-item">17. Dependency Blocked</a></li><li><a href="../02.cases/18.case-mid-sprint-change.html" class="nav-item">18. Mid Sprint Change</a></li><li><a href="../02.cases/19.case-data-sql-excel-report.html" class="nav-item">19. Data SQL Excel Report</a></li><li><a href="../02.cases/20.case-sow-assessment-vs-backlog.html" class="nav-item">20. SOW Assessment Vs Backlog</a></li><li><a href="../02.cases/21.case-dod-evidence.html" class="nav-item">21. DOD Evidence</a></li><li><a href="../02.cases/22.case-dontpassmessage.html" class="nav-item">22. Dontpassmessage</a></li><li><a href="../02.cases/23.case-weekly-blocked-scan.html" class="nav-item">23. Weekly Blocked Scan</a></li><li><a href="../02.cases/24.case-auto-ready-vs-pm-exception.html" class="nav-item">24. Auto Ready Vs Pm Exception</a></li><li><a href="../02.cases/25.case-spike-timebox.html" class="nav-item">25. Spike Timebox</a></li><li><a href="../02.cases/26.case-dept-tradeoff.html" class="nav-item">26. Dept Tradeoff</a></li><li><a href="../02.cases/27.case-incident-not-story.html" class="nav-item">27. Incident Not Story</a></li></ul></li><li class="nav-folder" data-nav-id="03.edges"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>03. Edges</span></button><ul class="nav-sub-tree"><li><a href="../03.edges/30.edge-unreadable-ocr.html" class="nav-item">30. Unreadable OCR</a></li><li><a href="../03.edges/31.edge-huge-doc-thin-signal.html" class="nav-item">31. Huge Doc Thin Signal</a></li><li><a href="../03.edges/32.edge-meeting-verbal-ac.html" class="nav-item">32. Meeting Verbal AC</a></li><li><a href="../03.edges/33.edge-ac-is-how.html" class="nav-item">33. AC Is How</a></li><li><a href="../03.edges/34.edge-epic-as-one-story.html" class="nav-item">34. Epic As One Story</a></li><li><a href="../03.edges/35.edge-subtask-two-pods.html" class="nav-item">35. Subtask Two Pods</a></li><li><a href="../03.edges/36.edge-pii-quarantine.html" class="nav-item">36. PII Quarantine</a></li><li><a href="../03.edges/37.edge-filename-version-chaos.html" class="nav-item">37. Filename Version Chaos</a></li><li><a href="../03.edges/38.edge-ai-hallucinated-ac.html" class="nav-item">38. AI Hallucinated AC</a></li><li><a href="../03.edges/39.edge-auto-move-without-pm.html" class="nav-item">39. Auto Move Without Pm</a></li><li><a href="../03.edges/40.edge-stale-paste-vs-drive.html" class="nav-item">40. Stale Paste Vs Drive</a></li><li><a href="../03.edges/41.edge-jira-git-key-mismatch.html" class="nav-item">41. Jira Git Key Mismatch</a></li><li><a href="../03.edges/42.edge-sql-prod-write.html" class="nav-item">42. SQL Prod Write</a></li><li><a href="../03.edges/43.edge-batch-classify-exceptions.html" class="nav-item">43. Batch Classify Exceptions</a></li><li><a href="../03.edges/44.edge-ready-externally-blocked.html" class="nav-item">44. Ready Externally Blocked</a></li><li><a href="../03.edges/45.edge-pod-bounce-to-sender.html" class="nav-item">45. Pod Bounce To Sender</a></li><li><a href="../03.edges/46.edge-duplicate-ask.html" class="nav-item">46. Duplicate Ask</a></li><li><a href="../03.edges/47.edge-defer-wip-unfunded.html" class="nav-item">47. Defer Wip Unfunded</a></li><li><a href="../03.edges/48.edge-reject-wrong-artifact.html" class="nav-item">48. Reject Wrong Artifact</a></li><li><a href="../03.edges/49.edge-secret-leak.html" class="nav-item">49. Secret Leak</a></li><li><a href="../03.edges/50.edge-env-access-blocked.html" class="nav-item">50. Env Access Blocked</a></li><li><a href="../03.edges/51.edge-irreversible-change.html" class="nav-item">51. Irreversible Change</a></li><li><a href="../03.edges/52.edge-silent-sender-dispute.html" class="nav-item">52. Silent Sender Dispute</a></li></ul></li></ul>
+    </nav>
+    <main id="content"><article class="markdown-body"><h1>39 — Edge: auto-move <strong>outside</strong> policy</h1>
+<h2>Symptom</h2>
+<p>Agent moves Drive to <code>/verified</code> or Jira to Ready when policy does <strong>not</strong> allow it: P0, <code>CONFLICT</code>, low confidence, untrusted author, or classify-job with write tools accidentally enabled.</p>
+<p>This is <strong>not</strong> the same as <a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a> auto-Ready. Policy green + audit log is allowed.</p>
+<h2>Detect</h2>
+<p>Write audit: <code>write_yn=true</code> and <code>commit_path</code> missing or <code>commit_path=auto</code> while exception flags true · missing required fields (<code>confidence</code>, <code>trusted_author</code>)</p>
+<h2>Flow</h2>
+<pre class="mermaid">flowchart TD
+  Auto[Unauthorized transition] --&gt; Revert
+  Revert --&gt; QuarantinePolicy[Disable write on classify-only jobs]
+  Revert --&gt; Human[PM re-reviews that artifact]</pre>
+<h2>Solution</h2>
+<p>Split skills:</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Writes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Classify</td>
+<td>Comment + labels only</td>
+</tr>
+<tr>
+<td>Apply-policy</td>
+<td>Ready / <code>/verified</code> <strong>only if</strong> <a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a> predicates all true</td>
+</tr>
+<tr>
+<td>Apply-gate</td>
+<td>PM phrase <code>APPLY GATE</code> for exception queue</td>
+</tr>
+</tbody></table>
+<p>Default deny on classify jobs. Apply-policy must fail closed if any exception flag is set. Unauthorized Ready = reason <code>policy-bypass</code> — overturn, not a sender <code>REWORK</code>.</p>
+<h2>Related</h2>
+<p><a href="../01.architecture/06.classification-and-pm-gate.html">06</a> <a href="../01.architecture/01.operating-model.html">01</a> <a href="../02.cases/24.case-auto-ready-vs-pm-exception.html">24</a> <a href="../02.cases/27.case-incident-not-story.html">27</a> <a href="./51.edge-irreversible-change.html">51</a></p>
+</article></main>
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            // Match Cursor / VS Code Markdown preview (dark workbench → mermaid "dark")
+            theme: 'dark',
+            securityLevel: 'loose',
+            flowchart: {
+                htmlLabels: true,
+                curve: 'basis',
+                useMaxWidth: true,
+                padding: 16,
+                nodeSpacing: 24,
+                rankSpacing: 48,
+                diagramPadding: 12
+            },
+            sequence: { useMaxWidth: false, diagramMarginX: 40, diagramMarginY: 20, actorMargin: 50, boxMargin: 10 },
+            er: { useMaxWidth: false },
+            gantt: { useMaxWidth: false },
+            journey: { useMaxWidth: false },
+            timeline: { useMaxWidth: false },
+            class: { useMaxWidth: false },
+            state: { useMaxWidth: false },
+            pie: { useMaxWidth: false },
+            mindmap: { useMaxWidth: false }
+        });
+
+        async function renderMermaid() {
+            const nodes = [...document.querySelectorAll('pre.mermaid')];
+            for (const el of nodes) {
+                const code = (el.textContent || '').trim();
+                if (!code) continue;
+                try {
+                    const id = 'mmd-' + Math.random().toString(36).slice(2);
+                    const { svg } = await mermaid.render(id, code);
+
+                    const stage = document.createElement('div');
+                    stage.className = 'mermaid-stage';
+
+                    const toolbar = document.createElement('div');
+                    toolbar.className = 'mermaid-toolbar';
+                    toolbar.innerHTML = [
+                        '<button type="button" data-act="zoom-out" title="Zoom out">−</button>',
+                        '<input class="zoom-input" type="number" min="5" max="500" step="5" value="100" title="Type zoom % then Enter" aria-label="Zoom percent">',
+                        '<span class="zoom-suffix">%</span>',
+                        '<button type="button" data-act="zoom-in" title="Zoom in">+</button>',
+                        '<button type="button" data-act="reset" title="Reset view">⟲</button>',
+                        '<button type="button" data-act="fullscreen" title="Fullscreen">⛶</button>'
+                    ].join('');
+
+                    const hint = document.createElement('div');
+                    hint.className = 'mermaid-hint';
+                    hint.textContent = 'Scroll zoom · Drag pan · Type % · ⛶ fullscreen';
+
+                    const viewport = document.createElement('div');
+                    viewport.className = 'mermaid-viewport';
+
+                    const wrap = document.createElement('div');
+                    wrap.className = 'mermaid';
+                    wrap.innerHTML = svg;
+                    const svgEl = wrap.querySelector('svg');
+                    if (svgEl) {
+                        svgEl.removeAttribute('height');
+                        svgEl.setAttribute('width', '100%');
+                        svgEl.style.maxWidth = '100%';
+                        svgEl.style.width = '100%';
+                        svgEl.style.height = 'auto';
+                    }
+
+                    viewport.appendChild(wrap);
+                    stage.appendChild(toolbar);
+                    stage.appendChild(hint);
+                    stage.appendChild(viewport);
+                    el.replaceWith(stage);
+
+                    const pz = Panzoom(wrap, {
+                        maxScale: 5,
+                        minScale: 0.05,
+                        // No contain — free zoom/pan (contain:'outside' locked min by diagram size)
+                        cursor: 'grab'
+                    });
+                    viewport.addEventListener('wheel', pz.zoomWithWheel);
+                    const zoomInput = toolbar.querySelector('.zoom-input');
+                    let syncing = false;
+                    const syncZoom = () => {
+                        if (!zoomInput || syncing) return;
+                        syncing = true;
+                        zoomInput.value = String(Math.round(pz.getScale() * 100));
+                        syncing = false;
+                    };
+                    const fitView = () => {
+                        const svg = wrap.querySelector('svg');
+                        if (!svg) return;
+                        pz.reset({ animate: false });
+                        // Fullscreen: fit both axes. Inline: keep width 100% (Markdown-preview style).
+                        if (!stage.classList.contains('is-fullscreen')) {
+                            syncZoom();
+                            return;
+                        }
+                        const bbox = svg.getBBox();
+                        const pad = 72;
+                        const sx = (viewport.clientWidth - pad) / Math.max(bbox.width, 1);
+                        const sy = (viewport.clientHeight - pad) / Math.max(bbox.height, 1);
+                        const scale = Math.max(0.05, Math.min(sx, sy, 1));
+                        pz.zoom(scale, { animate: false });
+                        requestAnimationFrame(() => {
+                            const wr = wrap.getBoundingClientRect();
+                            const vr = viewport.getBoundingClientRect();
+                            const pan = pz.getPan();
+                            pz.pan(
+                                pan.x + (vr.left + vr.width / 2) - (wr.left + wr.width / 2),
+                                pan.y + (vr.top + vr.height / 2) - (wr.top + wr.height / 2),
+                                { animate: false }
+                            );
+                            syncZoom();
+                        });
+                    };
+                    const applyZoomPct = () => {
+                        if (!zoomInput) return;
+                        let pct = Number(zoomInput.value);
+                        if (!Number.isFinite(pct)) pct = 100;
+                        pct = Math.min(500, Math.max(5, Math.round(pct)));
+                        zoomInput.value = String(pct);
+                        pz.zoom(pct / 100, { animate: true });
+                    };
+                    requestAnimationFrame(() => requestAnimationFrame(fitView));
+                    zoomInput.addEventListener('keydown', (ev) => {
+                        if (ev.key === 'Enter') {
+                            ev.preventDefault();
+                            applyZoomPct();
+                            zoomInput.blur();
+                        }
+                        // Don't let panzoom / page steal keys while typing
+                        ev.stopPropagation();
+                    });
+                    zoomInput.addEventListener('change', applyZoomPct);
+                    zoomInput.addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        zoomInput.select();
+                    });
+                    wrap.addEventListener('panzoomchange', syncZoom);
+                    toolbar.addEventListener('click', (ev) => {
+                        const btn = ev.target.closest('button[data-act]');
+                        if (!btn) return;
+                        const act = btn.dataset.act;
+                        if (act === 'zoom-in') pz.zoomIn();
+                        if (act === 'zoom-out') pz.zoomOut();
+                        if (act === 'reset') { fitView(); return; }
+                        if (act === 'fullscreen') {
+                            const on = stage.classList.toggle('is-fullscreen');
+                            btn.title = on ? 'Exit fullscreen (Esc)' : 'Fullscreen';
+                            btn.textContent = on ? '✕' : '⛶';
+                            document.body.style.overflow = on ? 'hidden' : '';
+                            requestAnimationFrame(() => fitView());
+                            return;
+                        }
+                        syncZoom();
+                    });
+                    document.addEventListener('keydown', (ev) => {
+                        if (ev.key === 'Escape' && stage.classList.contains('is-fullscreen')) {
+                            stage.classList.remove('is-fullscreen');
+                            const fsBtn = toolbar.querySelector('[data-act="fullscreen"]');
+                            if (fsBtn) { fsBtn.textContent = '⛶'; fsBtn.title = 'Fullscreen'; }
+                            document.body.style.overflow = '';
+                            requestAnimationFrame(() => fitView());
+                        }
+                    });
+                } catch (err) {
+                    el.classList.add('mermaid-error');
+                    el.textContent = 'Mermaid error: ' + (err && err.message ? err.message : String(err)) + '\n\n' + code;
+                    console.error('Mermaid failed:', err);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await renderMermaid();
+
+            document.querySelectorAll('.code-panel .code-copy').forEach((btn) => {
+                btn.addEventListener('click', async () => {
+                    const panel = btn.closest('.code-panel');
+                    const codeEl = panel?.querySelector('code');
+                    const text = codeEl?.textContent || '';
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        btn.textContent = 'Copied';
+                        btn.classList.add('is-copied');
+                        setTimeout(() => {
+                            btn.textContent = 'Copy';
+                            btn.classList.remove('is-copied');
+                        }, 1400);
+                    } catch {
+                        btn.textContent = 'Failed';
+                        setTimeout(() => { btn.textContent = 'Copy'; }, 1400);
+                    }
+                });
+            });
+
+            const sidebar = document.getElementById('sidebar');
+            const STORAGE_KEY = 'ai-pm-nav-open';
+            const currentUrl = new URL(window.location.href);
+
+            function loadOpenSet() {
+                try { return new Set(JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]')); }
+                catch { return new Set(); }
+            }
+            function saveOpenSet(set) {
+                sessionStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+            }
+
+            let openSet = loadOpenSet();
+
+            function setOpen(folder, open) {
+                const id = folder.dataset.navId;
+                folder.classList.toggle('open', open);
+                folder.querySelector('.folder-toggle')?.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (open) openSet.add(id); else openSet.delete(id);
+                saveOpenSet(openSet);
+            }
+
+            document.querySelectorAll('.nav-folder[data-nav-id]').forEach(folder => {
+                if (openSet.has(folder.dataset.navId)) setOpen(folder, true);
+            });
+
+            document.querySelectorAll('.folder-toggle').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const folder = btn.closest('.nav-folder');
+                    setOpen(folder, !folder.classList.contains('open'));
+                });
+            });
+
+            document.querySelectorAll('.nav-item').forEach(link => {
+                const linkUrl = new URL(link.href);
+                if (currentUrl.pathname === linkUrl.pathname) {
+                    link.classList.add('active');
+                    let parent = link.closest('.nav-folder');
+                    while (parent) {
+                        setOpen(parent, true);
+                        parent = parent.parentElement?.closest('.nav-folder');
+                    }
+                    link.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+            });
+
+            const saved = sessionStorage.getItem('sb-scroll');
+            if (saved) sidebar.scrollTop = parseInt(saved);
+            sidebar.onscroll = () => sessionStorage.setItem('sb-scroll', sidebar.scrollTop);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1384 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01.pmp-phase-mapping.md | AI PM Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown-light.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <style>
+        :root { --sidebar-width: 380px; --primary-color: #0969da; --sidebar-bg: #f6f8fa; --border-color: #d0d7de; }
+        body { margin: 0; display: flex; font-family: -apple-system, sans-serif; background: #fff; }
+        #sidebar { width: var(--sidebar-width); height: 100vh; overflow-y: auto; border-right: 1px solid var(--border-color); background: var(--sidebar-bg); padding: 30px 20px; position: fixed; box-sizing: border-box; z-index: 100; }
+        .nav-folder { margin-top: 8px; list-style: none; padding: 0; }
+        .folder-toggle {
+            display: flex; align-items: center; gap: 6px; width: 100%;
+            font-size: 12px; font-weight: 700; color: #656d76; padding: 6px 10px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            background: transparent; border: none; border-radius: 6px; cursor: pointer; text-align: left;
+        }
+        .folder-toggle:hover { background: #ebeff2; color: #1f2328; }
+        .folder-toggle .chevron {
+            display: inline-flex; width: 14px; height: 14px; flex-shrink: 0;
+            transition: transform 0.15s ease; color: #8c959f;
+        }
+        .nav-folder.open > .folder-toggle .chevron { transform: rotate(90deg); }
+        .nav-sub-tree {
+            list-style: none; padding-left: 15px; margin: 2px 0 6px;
+            border-left: 1px solid var(--border-color); display: none;
+        }
+        .nav-folder.open > .nav-sub-tree { display: block; }
+        .nav-item { display: block; padding: 6px 12px; font-size: 13px; color: #1f2328 !important; text-decoration: none !important; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+        .nav-item:hover { background: #ebeff2; }
+        .nav-item.active { background: var(--primary-color) !important; color: #fff !important; font-weight: bold; box-shadow: 0 2px 4px rgba(9, 105, 218, 0.3); }
+        #content { margin-left: var(--sidebar-width); padding: 60px 80px; width: calc(100% - var(--sidebar-width)); box-sizing: border-box; }
+        .markdown-body { max-width: 1100px; margin: 0 auto; }
+        .mermaid-stage {
+            position: relative;
+            margin: 30px 0;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            background: #1e1e1e;
+            overflow: hidden;
+        }
+        .mermaid-stage.is-fullscreen {
+            position: fixed; inset: 0; z-index: 9999; margin: 0; border-radius: 0;
+            border: none; background: #0d1117;
+        }
+        .mermaid-toolbar {
+            position: absolute; top: 10px; right: 10px; z-index: 5;
+            display: flex; gap: 4px; padding: 4px;
+            background: rgba(22, 27, 34, 0.92); border: 1px solid #30363d; border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+        }
+        .mermaid-toolbar button {
+            appearance: none; border: none; cursor: pointer;
+            width: 32px; height: 32px; border-radius: 6px;
+            background: transparent; color: #e6edf3; font-size: 16px; line-height: 1;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .mermaid-toolbar button:hover { background: #30363d; }
+        .mermaid-toolbar .zoom-input {
+            width: 52px; height: 32px; box-sizing: border-box;
+            text-align: center; color: #e6edf3; background: #0d1117;
+            border: 1px solid #30363d; border-radius: 6px;
+            font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+            padding: 0 2px; outline: none;
+        }
+        .mermaid-toolbar .zoom-input:focus { border-color: #58a6ff; }
+        .mermaid-toolbar .zoom-suffix {
+            color: #8b949e; font: 12px/32px ui-monospace, SFMono-Regular, Menlo, monospace;
+            padding-right: 4px; user-select: none;
+        }
+        .mermaid-hint {
+            position: absolute; left: 12px; bottom: 10px; z-index: 5;
+            color: #8b949e; font-size: 11px; pointer-events: none;
+            background: rgba(22, 27, 34, 0.75); padding: 2px 8px; border-radius: 4px;
+        }
+        .mermaid-stage.is-fullscreen .mermaid-hint { display: none; }
+        .mermaid-viewport {
+            height: auto;
+            overflow: auto;
+            cursor: grab;
+            touch-action: none;
+            padding-top: 52px;
+            padding-bottom: 28px;
+        }
+        .mermaid-stage.is-fullscreen .mermaid-viewport {
+            height: 100vh;
+            overflow: hidden;
+        }
+        .mermaid-viewport:active { cursor: grabbing; }
+        .mermaid {
+            background: transparent; border: none; border-radius: 0;
+            padding: 24px; margin: 0; overflow: visible; text-align: center;
+            line-height: normal; color: #e6edf3;
+            width: 100%;
+            min-width: 0;
+            transform-origin: 0 0;
+        }
+        .mermaid svg {
+            max-width: 100% !important;
+            width: 100%;
+            height: auto !important;
+            display: block;
+            vertical-align: middle;
+        }
+        /* Structural only — never force node/label colors (classDef must win) */
+        .mermaid foreignObject div {
+            display: inline-block;
+            white-space: nowrap;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+        /* Soft nested clusters: keep Mermaid dark gray, make it translucent */
+        .mermaid .cluster rect {
+            fill-opacity: 0.45;
+        }
+        .mermaid-error { border-color: #cf222e; background: #fff8f8; color: #82071e; font-family: ui-monospace, Menlo, monospace; font-size: 12px; text-align: left; white-space: pre-wrap; margin: 30px 0; padding: 16px; border: 1px solid; border-radius: 8px; }
+
+        /* IDE-friendly code panels (LLD snippets) */
+        .markdown-body .code-panel {
+            margin: 1.25em 0 1.75em;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            background: #0d1117;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+        }
+        .markdown-body .code-panel-header {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; padding: 8px 12px;
+            background: #161b22; border-bottom: 1px solid #30363d;
+        }
+        .markdown-body .code-lang {
+            font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+            color: #79c0ff; letter-spacing: 0.01em;
+            background: #21262d; border: 1px solid #30363d;
+            border-radius: 999px; padding: 4px 10px;
+            text-transform: none;
+        }
+        .markdown-body .code-copy {
+            appearance: none; cursor: pointer;
+            font: 600 11px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #e6edf3; background: #21262d; border: 1px solid #30363d;
+            border-radius: 6px; padding: 6px 10px;
+        }
+        .markdown-body .code-copy:hover { background: #30363d; border-color: #8b949e; }
+        .markdown-body .code-copy.is-copied {
+            color: #3fb950; border-color: #238636; background: rgba(35, 134, 54, 0.15);
+        }
+        .markdown-body .code-panel-body {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            max-height: min(70vh, 640px);
+            overflow: auto;
+            background: #0d1117;
+        }
+        .markdown-body .code-lines {
+            user-select: none; text-align: right;
+            padding: 14px 0 14px 12px; min-width: 2.5em;
+            border-right: 1px solid #21262d; background: #0d1117;
+            font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            color: #484f58;
+        }
+        .markdown-body .code-lines span { display: block; padding-right: 12px; }
+        .markdown-body .code-pre {
+            margin: 0 !important; padding: 14px 16px !important;
+            background: transparent !important; border: none !important;
+            overflow: visible !important; border-radius: 0 !important;
+        }
+        .markdown-body .code-pre code {
+            display: block; padding: 0 !important; background: transparent !important;
+            font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+            color: #e6edf3; white-space: pre; tab-size: 4;
+        }
+        .markdown-body pre:not(.mermaid):not(.code-pre) {
+            /* fallback plain pre */
+            background: #0d1117; color: #e6edf3; border-radius: 10px; border: 1px solid #30363d;
+        }
+    </style>
+</head>
+<body>
+    <nav id="sidebar">
+        <h1 style="font-size:20px;margin-bottom:20px;font-weight:600;">Le Tat Thang</h1>
+        <ul style="list-style:none;padding:0;margin:0;"><li><a href="00.index.html" class="nav-item">00. Index</a></li><li><a href="00.overall-landscape.html" class="nav-item">00. Overall Landscape</a></li><li><a href="01.pmp-phase-mapping.html" class="nav-item">01. PMP Phase Mapping</a></li><li class="nav-folder" data-nav-id="01.architecture"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>01. Architecture</span></button><ul class="nav-sub-tree"><li><a href="01.architecture/01.operating-model.html" class="nav-item">01. Operating Model</a></li><li><a href="01.architecture/02.nucleus-and-parallel-stacks.html" class="nav-item">02. Nucleus And Parallel Stacks</a></li><li><a href="01.architecture/02b.claude-ai-nucleus.html" class="nav-item">02b. Claude AI Nucleus</a></li><li><a href="01.architecture/03.mcp-system-map.html" class="nav-item">03. MCP System Map</a></li><li><a href="01.architecture/04.departments-actors.html" class="nav-item">04. Departments Actors</a></li><li><a href="01.architecture/05.rag-architecture.html" class="nav-item">05. Rag Architecture</a></li><li><a href="01.architecture/06.classification-and-pm-gate.html" class="nav-item">06. Classification And Pm Gate</a></li><li><a href="01.architecture/07.rubric-document.html" class="nav-item">07. Rubric Document</a></li><li><a href="01.architecture/08.rubric-jira.html" class="nav-item">08. Rubric Jira</a></li><li><a href="01.architecture/09.security-pii-governance.html" class="nav-item">09. Security PII Governance</a></li></ul></li><li class="nav-folder" data-nav-id="02.cases"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>02. Cases</span></button><ul class="nav-sub-tree"><li><a href="02.cases/10.case-document-intake-verify.html" class="nav-item">10. Document Intake Verify</a></li><li><a href="02.cases/11.case-jira-hierarchy-quality.html" class="nav-item">11. Jira Hierarchy Quality</a></li><li><a href="02.cases/12.case-meet-to-ready.html" class="nav-item">12. Meet To Ready</a></li><li><a href="02.cases/13.case-figma-ticket-drift.html" class="nav-item">13. Figma Ticket Drift</a></li><li><a href="02.cases/14.case-sot-conflict.html" class="nav-item">14. SOT Conflict</a></li><li><a href="02.cases/15.case-pr-ci-vs-ticket.html" class="nav-item">15. PR CI Vs Ticket</a></li><li><a href="02.cases/16.case-status-pack.html" class="nav-item">16. Status Pack</a></li><li><a href="02.cases/17.case-dependency-blocked.html" class="nav-item">17. Dependency Blocked</a></li><li><a href="02.cases/18.case-mid-sprint-change.html" class="nav-item">18. Mid Sprint Change</a></li><li><a href="02.cases/19.case-data-sql-excel-report.html" class="nav-item">19. Data SQL Excel Report</a></li><li><a href="02.cases/20.case-sow-assessment-vs-backlog.html" class="nav-item">20. SOW Assessment Vs Backlog</a></li><li><a href="02.cases/21.case-dod-evidence.html" class="nav-item">21. DOD Evidence</a></li><li><a href="02.cases/22.case-dontpassmessage.html" class="nav-item">22. Dontpassmessage</a></li><li><a href="02.cases/23.case-weekly-blocked-scan.html" class="nav-item">23. Weekly Blocked Scan</a></li><li><a href="02.cases/24.case-auto-ready-vs-pm-exception.html" class="nav-item">24. Auto Ready Vs Pm Exception</a></li><li><a href="02.cases/25.case-spike-timebox.html" class="nav-item">25. Spike Timebox</a></li><li><a href="02.cases/26.case-dept-tradeoff.html" class="nav-item">26. Dept Tradeoff</a></li><li><a href="02.cases/27.case-incident-not-story.html" class="nav-item">27. Incident Not Story</a></li></ul></li><li class="nav-folder" data-nav-id="03.edges"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>03. Edges</span></button><ul class="nav-sub-tree"><li><a href="03.edges/30.edge-unreadable-ocr.html" class="nav-item">30. Unreadable OCR</a></li><li><a href="03.edges/31.edge-huge-doc-thin-signal.html" class="nav-item">31. Huge Doc Thin Signal</a></li><li><a href="03.edges/32.edge-meeting-verbal-ac.html" class="nav-item">32. Meeting Verbal AC</a></li><li><a href="03.edges/33.edge-ac-is-how.html" class="nav-item">33. AC Is How</a></li><li><a href="03.edges/34.edge-epic-as-one-story.html" class="nav-item">34. Epic As One Story</a></li><li><a href="03.edges/35.edge-subtask-two-pods.html" class="nav-item">35. Subtask Two Pods</a></li><li><a href="03.edges/36.edge-pii-quarantine.html" class="nav-item">36. PII Quarantine</a></li><li><a href="03.edges/37.edge-filename-version-chaos.html" class="nav-item">37. Filename Version Chaos</a></li><li><a href="03.edges/38.edge-ai-hallucinated-ac.html" class="nav-item">38. AI Hallucinated AC</a></li><li><a href="03.edges/39.edge-auto-move-without-pm.html" class="nav-item">39. Auto Move Without Pm</a></li><li><a href="03.edges/40.edge-stale-paste-vs-drive.html" class="nav-item">40. Stale Paste Vs Drive</a></li><li><a href="03.edges/41.edge-jira-git-key-mismatch.html" class="nav-item">41. Jira Git Key Mismatch</a></li><li><a href="03.edges/42.edge-sql-prod-write.html" class="nav-item">42. SQL Prod Write</a></li><li><a href="03.edges/43.edge-batch-classify-exceptions.html" class="nav-item">43. Batch Classify Exceptions</a></li><li><a href="03.edges/44.edge-ready-externally-blocked.html" class="nav-item">44. Ready Externally Blocked</a></li><li><a href="03.edges/45.edge-pod-bounce-to-sender.html" class="nav-item">45. Pod Bounce To Sender</a></li><li><a href="03.edges/46.edge-duplicate-ask.html" class="nav-item">46. Duplicate Ask</a></li><li><a href="03.edges/47.edge-defer-wip-unfunded.html" class="nav-item">47. Defer Wip Unfunded</a></li><li><a href="03.edges/48.edge-reject-wrong-artifact.html" class="nav-item">48. Reject Wrong Artifact</a></li><li><a href="03.edges/49.edge-secret-leak.html" class="nav-item">49. Secret Leak</a></li><li><a href="03.edges/50.edge-env-access-blocked.html" class="nav-item">50. Env Access Blocked</a></li><li><a href="03.edges/51.edge-irreversible-change.html" class="nav-item">51. Irreversible Change</a></li><li><a href="03.edges/52.edge-silent-sender-dispute.html" class="nav-item">52. Silent Sender Dispute</a></li></ul></li></ul>
+    </nav>
+    <main id="content"><article class="markdown-body"><h1>01 — PMBOK® Guide 8 mapping (Focus Areas, domains, outcomes)</h1>
+<h2>Purpose</h2>
+<p>Map this pack onto <strong>PMBOK Guide — Eighth Edition</strong> (Nov 2025, ANSI/PMI 99-001-2025) — not PMBOK 6 process groups alone, and not PMBOK 7’s eight domains as the live grid.</p>
+<p>PMBOK 8 has <strong>three layers</strong>. Focus Areas are only the <em>when</em>. Outcomes live in each domain’s <strong>Check Results</strong>: did the intended result happen, not “did we run a process.”</p>
+<p>Seat: <strong>TDM</strong>. A JD may still say TPM. Same seat.</p>
+<p>This is a <strong>tailored hybrid / adaptive</strong> application (Standard §4.2–4.3, Guide §3 Tailoring). OpAnalysts is ongoing pod work. Cadence is sprint/Kanban pull, not a single predictive close.</p>
+<h2>How PMBOK 8 is read here</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>PMBOK 8 name</th>
+<th>Question</th>
+<th>This pack</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mindset</td>
+<td>6 <strong>principles</strong> + 3-axis mindset</td>
+<td>Why we behave this way</td>
+<td>Law <a href="./01.architecture/01.operating-model.html">01</a></td>
+</tr>
+<tr>
+<td>What</td>
+<td>7 <strong>performance domains</strong> + <strong>Check Results</strong></td>
+<td>What must be true</td>
+<td>Classes <a href="./01.architecture/06.classification-and-pm-gate.html">06</a> + cases/edges</td>
+</tr>
+<tr>
+<td>When</td>
+<td>5 <strong>Focus Areas</strong> (old Process Groups, approach-agnostic)</td>
+<td>When in the loop</td>
+<td>Snapshot §4</td>
+</tr>
+<tr>
+<td>How (non-prescriptive)</td>
+<td>40 processes inside domains</td>
+<td>Optional how</td>
+<td>Named only where the TDM move is that process</td>
+</tr>
+<tr>
+<td>Value</td>
+<td>Standard ch. 2 <strong>System for Value Delivery</strong></td>
+<td>Output vs outcome vs benefit vs value</td>
+<td>§2</td>
+</tr>
+<tr>
+<td>AI</td>
+<td>Appendix <strong>X3</strong></td>
+<td>Responsible AI</td>
+<td>Nucleus never SoT · classify/draft only</td>
+</tr>
+</tbody></table>
+<p>PMBOK 7 leftover (why the earlier line sounded better): Delivery / Planning / Project Work / Measurement / Uncertainty <strong>were domains</strong>. In 8 they <strong>moved</strong>: Delivery → <strong>Scope</strong> (+ quality in <strong>Governance</strong>); Planning → <strong>Focus Area</strong>, not a domain; Project Work → <strong>Governance</strong>; Measurement → <strong>Monitor and Control …</strong> inside each domain; Uncertainty → <strong>Risk</strong> + principle <em>Adopt a Holistic View</em>.</p>
+<pre class="mermaid">flowchart TB
+  Prin[6 principles]
+  Dom[7 domains + Check Results]
+  FA[5 Focus Areas]
+  Pack[Classify JSON + commit path]
+  Prin --&gt; Dom
+  Dom --&gt; Pack
+  FA --&gt; Pack</pre>
+<hr>
+<h2>1. Six principles → pack law</h2>
+<p>Mindset (PMBOK 8): <strong>Proactive</strong> (holistic + quality) · <strong>Ownership</strong> (accountable + empowered) · <strong>Value-driven</strong> (value + sustainability).</p>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Pack behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Adopt a Holistic View</strong></td>
+<td>SoT conflict, SoW vs backlog, CS vs Fraud vs Pay, deps, incident leftover — one system, not local tickets</td>
+</tr>
+<tr>
+<td><strong>Focus on Value</strong></td>
+<td>Outcome AC, not Kafka-as-AC. <code>DEFER</code> / <code>CHANGE</code> / <code>TRADEOFF</code> instead of silent insert. Pods pull Ready</td>
+</tr>
+<tr>
+<td><strong>Embed Quality Into Processes and Deliverables</strong></td>
+<td>A–G + hierarchy. Auto-Ready only under policy. <code>DONE_FAIL</code> if Done has no evidence. <code>uncited-claim</code> never auto</td>
+</tr>
+<tr>
+<td><strong>Be an Accountable Leader</strong></td>
+<td>TDM owns <strong>policy, sample, exceptions, honest status</strong> — not every Ready click, not merge, not how</td>
+</tr>
+<tr>
+<td><strong>Integrate Sustainability</strong></td>
+<td>Thin and honest: PII / secret / prod-write / irreversible — legal and blast-radius, not a full ESG program</td>
+</tr>
+<tr>
+<td><strong>Build an Empowered Culture</strong></td>
+<td>Sender owns red. Pod owns pull and how. Lead owns trade-off. AI does not rank departments</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>2. Value delivery (Standard §2.1) — output is not outcome</h2>
+<p>PMBOK 8 still distinguishes <strong>output → outcome → benefit → value</strong>. Amateur PM reports outputs (tickets Done). This pack checks outcomes.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Meaning</th>
+<th>Pack Check Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Output</strong></td>
+<td>Artifact produced</td>
+<td>Classified JSON · <code>/verified</code> slice · Ready card · status pack draft</td>
+</tr>
+<tr>
+<td><strong>Outcome</strong></td>
+<td>Usable change in how work runs</td>
+<td>Pod can <strong>pull</strong> without TDM mailbox. Red returns to <strong>sender</strong>. Exceptions are a minority after Phase 1</td>
+</tr>
+<tr>
+<td><strong>Benefit</strong></td>
+<td>Measurable improvement</td>
+<td>Intake→Ready down without bounce-up. Hallucinated AC to pod = <strong>zero</strong>. Auto-Ready overturn rate tracked</td>
+</tr>
+<tr>
+<td><strong>Value</strong></td>
+<td>Why the org hired a TDM</td>
+<td>5–6 pods moving (Q07). Status Head can use. Commercial gaps are Lead decisions, not pod fights</td>
+</tr>
+</tbody></table>
+<p>Success metrics already in <a href="./01.architecture/01.operating-model.html">01</a> are the <strong>benefit</strong> row — they are Check Results, not vanity velocity.</p>
+<hr>
+<h2>3. Seven domains — Check Results this pack can show</h2>
+<p>Each PMBOK 8 domain ends in <strong>Check Results</strong> (outcomes + how you know). Below is <strong>this pack’s</strong> Check Results aligned to those domains — not a copy of PMI’s tables.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Intended outcome</th>
+<th>How we check</th>
+<th>Homes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Governance</strong></td>
+<td>Policy commits, not a human router. Unauthorized Ready is overturned. Knowledge after <code>/verified</code>. AI is cockpit</td>
+<td>Audit <code>commit_path</code>. Sample greens. <a href="./03.edges/39.edge-auto-move-without-pm.html">39</a> fail-closed</td>
+<td><a href="./01.architecture/01.operating-model.html">01</a> <a href="./01.architecture/06.classification-and-pm-gate.html">06</a> <a href="./02.cases/24.case-auto-ready-vs-pm-exception.html">24</a> <a href="./03.edges/43.edge-batch-classify-exceptions.html">43</a></td>
+</tr>
+<tr>
+<td><strong>Scope</strong></td>
+<td>Work is the agreed what/why/AC. Extra how, SoW gaps, and fake Done are typed</td>
+<td>A–G / hierarchy. <code>REWORK</code> codes. <code>TRADEOFF</code> <code>scope-gap</code>. <code>DONE_FAIL</code></td>
+<td><a href="./01.architecture/07.rubric-document.html">07</a> <a href="./01.architecture/08.rubric-jira.html">08</a> <a href="./02.cases/10.case-document-intake-verify.html">10</a> <a href="./02.cases/11.case-jira-hierarchy-quality.html">11</a> <a href="./02.cases/20.case-sow-assessment-vs-backlog.html">20</a> <a href="./02.cases/21.case-dod-evidence.html">21</a></td>
+</tr>
+<tr>
+<td><strong>Schedule</strong></td>
+<td>WIP and sprint goal are law. Discovery has a clock. Deps have needed-by</td>
+<td><code>DEFER</code> <code>wip-exceeded</code>. <code>CHANGE</code> swap. Spike timebox. <code>BLOCKED_EXT</code> not pretty On Track</td>
+<td><a href="./02.cases/18.case-mid-sprint-change.html">18</a> <a href="./02.cases/25.case-spike-timebox.html">25</a> <a href="./03.edges/44.edge-ready-externally-blocked.html">44</a> <a href="./03.edges/47.edge-defer-wip-unfunded.html">47</a></td>
+</tr>
+<tr>
+<td><strong>Finance</strong></td>
+<td>Unfunded / out-of-contract is parked, not a 24h <code>REWORK</code></td>
+<td><code>unfunded</code> <code>out-of-contract</code> <code>scope-creep</code></td>
+<td><a href="./02.cases/20.case-sow-assessment-vs-backlog.html">20</a> <a href="./03.edges/47.edge-defer-wip-unfunded.html">47</a></td>
+</tr>
+<tr>
+<td><strong>Stakeholders</strong></td>
+<td>Right next actor. Packet before pod. Lead on two-dept fights</td>
+<td>DontPassMessage. Sender SLA. <code>TRADEOFF</code>. <code>silent-sender</code> / <code>dispute</code></td>
+<td><a href="./01.architecture/04.departments-actors.html">04</a> <a href="./02.cases/22.case-dontpassmessage.html">22</a> <a href="./02.cases/26.case-dept-tradeoff.html">26</a> <a href="./03.edges/52.edge-silent-sender-dispute.html">52</a></td>
+</tr>
+<tr>
+<td><strong>Resources</strong></td>
+<td>Capacity and access are visible. One Ready item, one how-owner. Pod pulls</td>
+<td><code>cross-pod</code> split. WIP. <code>env-missing</code> / <code>access-blocked</code>. Never TDM-assign In Progress</td>
+<td><a href="./02.cases/24.case-auto-ready-vs-pm-exception.html">24</a> <a href="./03.edges/35.edge-subtask-two-pods.html">35</a> <a href="./03.edges/50.edge-env-access-blocked.html">50</a></td>
+</tr>
+<tr>
+<td><strong>Risk</strong></td>
+<td>Safety and live Sev are not DoR. Irreversible is never auto</td>
+<td><code>QUARANTINE</code> <code>INCIDENT</code> <code>irreversible</code> <code>sql-prod</code> <code>policy-bypass</code></td>
+<td><a href="./01.architecture/09.security-pii-governance.html">09</a> <a href="./02.cases/27.case-incident-not-story.html">27</a> <a href="./03.edges/36.edge-pii-quarantine.html">36</a> <a href="./03.edges/49.edge-secret-leak.html">49</a> <a href="./03.edges/51.edge-irreversible-change.html">51</a></td>
+</tr>
+</tbody></table>
+<p><strong>Honest gaps (tailoring):</strong> no EVM / CPI / budget baseline (Finance is commercial-scope only). No full sustainability program. Closing is <strong>increment</strong> evidence, not program close. Procurement sits in PMI Appendix X4 — this pack does not run bid/contract ops.</p>
+<hr>
+<h2>4. Five Focus Areas (when)</h2>
+<p>Same five buckets as old Process Groups. PMBOK 8 name = <strong>Focus Area</strong>. They <strong>overlap</strong> (M&amp;C runs with Executing). They are <strong>not</strong> waterfall phases.</p>
+<table>
+<thead>
+<tr>
+<th>Focus Area</th>
+<th>What this pack does</th>
+<th>Nearest 8 process</th>
+<th>Homes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Initiating</strong></td>
+<td>New work / packet / type / SoW into the system</td>
+<td><em>Initiate Project or Phase</em> · <em>Identify Stakeholders</em></td>
+<td><a href="./02.cases/10.case-document-intake-verify.html">10</a> <a href="./02.cases/12.case-meet-to-ready.html">12</a> <a href="./02.cases/20.case-sow-assessment-vs-backlog.html">20</a> <a href="./02.cases/22.case-dontpassmessage.html">22</a> <a href="./03.edges/46.edge-duplicate-ask.html">46</a> <a href="./03.edges/48.edge-reject-wrong-artifact.html">48</a></td>
+</tr>
+<tr>
+<td><strong>Planning</strong></td>
+<td>DoR, split, spike, park, swap, SoT</td>
+<td><em>Elicit and Analyze Requirements</em> · <em>Develop Scope Structure</em> · <em>Develop Schedule</em> · <em>Plan Risk Responses</em></td>
+<td><a href="./02.cases/11.case-jira-hierarchy-quality.html">11</a> <a href="./02.cases/18.case-mid-sprint-change.html">18</a> <a href="./02.cases/25.case-spike-timebox.html">25</a> <a href="./02.cases/26.case-dept-tradeoff.html">26</a> <a href="./03.edges/47.edge-defer-wip-unfunded.html">47</a></td>
+</tr>
+<tr>
+<td><strong>Executing</strong></td>
+<td>Apply-policy, pod <strong>pull</strong>, spike run, war room</td>
+<td><em>Manage Project Execution</em> · <em>Implement Risk Responses</em></td>
+<td><a href="./02.cases/24.case-auto-ready-vs-pm-exception.html">24</a> <a href="./02.cases/27.case-incident-not-story.html">27</a> <a href="./02.cases/15.case-pr-ci-vs-ticket.html">15</a></td>
+</tr>
+<tr>
+<td><strong>Monitoring &amp; Controlling</strong></td>
+<td>Status, deps, bounce, sample, audit, gate</td>
+<td><em>Monitor and Control Project Performance</em> · <em>Assess and Implement Changes</em> · <em>Validate Scope</em></td>
+<td><a href="./01.architecture/06.classification-and-pm-gate.html">06</a> <a href="./02.cases/16.case-status-pack.html">16</a> <a href="./02.cases/17.case-dependency-blocked.html">17</a> <a href="./02.cases/23.case-weekly-blocked-scan.html">23</a> <a href="./03.edges/39.edge-auto-move-without-pm.html">39</a> <a href="./03.edges/44.edge-ready-externally-blocked.html">44</a> <a href="./03.edges/45.edge-pod-bounce-to-sender.html">45</a> <a href="./03.edges/52.edge-silent-sender-dispute.html">52</a></td>
+</tr>
+<tr>
+<td><strong>Closing</strong></td>
+<td>Thin — <strong>accepted evidence</strong>, not program close</td>
+<td><em>Validate Scope</em> · <em>Close Project or Phase</em> (increment)</td>
+<td><a href="./02.cases/21.case-dod-evidence.html">21</a> <code>DONE_FAIL</code></td>
+</tr>
+</tbody></table>
+<pre class="mermaid">flowchart LR
+  I[Initiating] --&gt; P[Planning]
+  P --&gt; E[Executing]
+  E --&gt; M[M and C]
+  M --&gt; C[Closing]
+  M --&gt; P
+  I --&gt; M</pre>
+<p><code>REWORK</code> returns to Planning. <code>BLOCKED_EXT</code> is control during Executing. <code>DONE_FAIL</code> reopens Executing.</p>
+<hr>
+<h2>5. Cases 10–27 — Focus Area × domain × outcome</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>File</th>
+<th>Focus</th>
+<th>Domain</th>
+<th>Check Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10</td>
+<td><a href="./02.cases/10.case-document-intake-verify.html">Document intake</a></td>
+<td>Initiating (+ Planning)</td>
+<td>Scope · Governance</td>
+<td>Typed artifact in <code>/intake</code>. A–G codes or <code>/verified</code>. PII/secret stopped</td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="./02.cases/11.case-jira-hierarchy-quality.html">Jira hierarchy</a></td>
+<td>Planning</td>
+<td>Scope</td>
+<td>Layer legal. Story pull-ready. Ready is policy, not a TDM click</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="./02.cases/12.case-meet-to-ready.html">Meet → Intake</a></td>
+<td>Initiating (+ Planning)</td>
+<td>Stakeholders · Scope</td>
+<td>MoM + stubs. Meeting never auto-Ready</td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="./02.cases/13.case-figma-ticket-drift.html">Figma vs ticket</a></td>
+<td>M&amp;C (+ Planning)</td>
+<td>Scope · Governance</td>
+<td>Canonical SoT picked. AC cites frame version</td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="./02.cases/14.case-sot-conflict.html">SoT conflict</a></td>
+<td>Planning (+ M&amp;C)</td>
+<td>Governance · Scope</td>
+<td>One canonical URL. Losers <code>stale-source</code></td>
+</tr>
+<tr>
+<td>15</td>
+<td><a href="./02.cases/15.case-pr-ci-vs-ticket.html">PR / CI vs ticket</a></td>
+<td>Executing (+ M&amp;C, Closing)</td>
+<td>Governance · Scope</td>
+<td>Key matches. Fake Done → <code>DONE_FAIL</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td><a href="./02.cases/16.case-status-pack.html">Status pack</a></td>
+<td>M&amp;C</td>
+<td>Governance · Schedule</td>
+<td>Head sees At Risk/Blocked, not painted On Track</td>
+</tr>
+<tr>
+<td>17</td>
+<td><a href="./02.cases/17.case-dependency-blocked.html">Dependency blocked</a></td>
+<td>M&amp;C (+ Planning)</td>
+<td>Schedule · Risk</td>
+<td><code>needed-by</code> exists or <code>REWORK</code>. Slip → <code>BLOCKED_EXT</code></td>
+</tr>
+<tr>
+<td>18</td>
+<td><a href="./02.cases/18.case-mid-sprint-change.html">Mid-sprint change</a></td>
+<td>Planning (+ M&amp;C)</td>
+<td>Governance · Schedule</td>
+<td><em>Assess and Implement Changes</em>: swap or <code>DEFER</code>. Not silent insert</td>
+</tr>
+<tr>
+<td>19</td>
+<td><a href="./02.cases/19.case-data-sql-excel-report.html">SQL / Excel report</a></td>
+<td>M&amp;C (+ Executing)</td>
+<td>Governance · Finance</td>
+<td>Grain/NFR declared. Replica only. Number PM will send</td>
+</tr>
+<tr>
+<td>20</td>
+<td><a href="./02.cases/20.case-sow-assessment-vs-backlog.html">SoW vs backlog</a></td>
+<td>Initiating (+ Planning)</td>
+<td>Scope · Finance</td>
+<td>Clause mapped or <code>TRADEOFF</code>. Creep parked, not pod fight</td>
+</tr>
+<tr>
+<td>21</td>
+<td><a href="./02.cases/21.case-dod-evidence.html">DoD evidence</a></td>
+<td>Closing (+ M&amp;C)</td>
+<td>Scope</td>
+<td><em>Validate Scope</em>: observable evidence or reopen. Pod owns hole</td>
+</tr>
+<tr>
+<td>22</td>
+<td><a href="./02.cases/22.case-dontpassmessage.html">DontPassMessage</a></td>
+<td>Initiating</td>
+<td>Stakeholders</td>
+<td>Packet before classify. Pod not on the raw ping</td>
+</tr>
+<tr>
+<td>23</td>
+<td><a href="./02.cases/23.case-weekly-blocked-scan.html">Weekly blocked scan</a></td>
+<td>M&amp;C</td>
+<td>Risk · Schedule</td>
+<td>Recurring <em>Monitor Risks</em> / performance pulse</td>
+</tr>
+<tr>
+<td>24</td>
+<td><a href="./02.cases/24.case-auto-ready-vs-pm-exception.html">Auto-Ready vs exception</a></td>
+<td>Executing (+ Planning, M&amp;C)</td>
+<td>Governance</td>
+<td>Policy execute. Sample + exception = Check Results on the ladder</td>
+</tr>
+<tr>
+<td>25</td>
+<td><a href="./02.cases/25.case-spike-timebox.html">Spike</a></td>
+<td>Planning (+ Executing)</td>
+<td>Scope · Schedule</td>
+<td>Clock + exit evidence. Spike is not Ready-for-build</td>
+</tr>
+<tr>
+<td>26</td>
+<td><a href="./02.cases/26.case-dept-tradeoff.html">TRADEOFF</a></td>
+<td>Planning (+ M&amp;C)</td>
+<td>Stakeholders · Resources</td>
+<td>Lead picks one slot. Loser <code>DEFER</code>. TDM is not secret PO</td>
+</tr>
+<tr>
+<td>27</td>
+<td><a href="./02.cases/27.case-incident-not-story.html">Incident</a></td>
+<td>Executing (+ M&amp;C)</td>
+<td>Risk</td>
+<td>War room. Not A–G intake. Hardening later as <code>CHANGE</code>/<code>SPIKE</code></td>
+</tr>
+</tbody></table>
+<p><strong>18/18 cases mapped.</strong></p>
+<hr>
+<h2>6. Edges 30–52 — Focus Area × domain × outcome</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>File</th>
+<th>Focus</th>
+<th>Domain</th>
+<th>Check Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>30</td>
+<td><a href="./03.edges/30.edge-unreadable-ocr.html">OCR</a></td>
+<td>Initiating</td>
+<td>Risk · Governance</td>
+<td><code>QUARANTINE</code>. Native file. No RAG</td>
+</tr>
+<tr>
+<td>31</td>
+<td><a href="./03.edges/31.edge-huge-doc-thin-signal.html">Thin signal</a></td>
+<td>Planning</td>
+<td>Scope</td>
+<td>Named slices verified. Whole file not stamped</td>
+</tr>
+<tr>
+<td>32</td>
+<td><a href="./03.edges/32.edge-meeting-verbal-ac.html">Verbal AC</a></td>
+<td>Planning</td>
+<td>Scope · Stakeholders</td>
+<td>Ticket <code>Needs_AC</code>. Quote or empty — no vibe-AC</td>
+</tr>
+<tr>
+<td>33</td>
+<td><a href="./03.edges/33.edge-ac-is-how.html">AC is how</a></td>
+<td>Planning</td>
+<td>Scope</td>
+<td>Outcome testable. How is advice. Unknown → spike</td>
+</tr>
+<tr>
+<td>34</td>
+<td><a href="./03.edges/34.edge-epic-as-one-story.html">Epic as story</a></td>
+<td>Planning</td>
+<td>Scope</td>
+<td>Split with independent AC. TDM does not rewrite</td>
+</tr>
+<tr>
+<td>35</td>
+<td><a href="./03.edges/35.edge-subtask-two-pods.html">Two pods</a></td>
+<td>Planning</td>
+<td>Resources · Scope</td>
+<td>One how-owner per Ready item</td>
+</tr>
+<tr>
+<td>36</td>
+<td><a href="./03.edges/36.edge-pii-quarantine.html">PII</a></td>
+<td>Initiating</td>
+<td>Risk</td>
+<td><code>pii-hit</code>. No classify-as-requirement</td>
+</tr>
+<tr>
+<td>37</td>
+<td><a href="./03.edges/37.edge-filename-version-chaos.html">Filename chaos</a></td>
+<td>Planning</td>
+<td>Governance · Scope</td>
+<td>Canonical = URL in G, not <code>final_v3</code></td>
+</tr>
+<tr>
+<td>38</td>
+<td><a href="./03.edges/38.edge-ai-hallucinated-ac.html">Hallucinated AC</a></td>
+<td>Planning (+ M&amp;C)</td>
+<td>Governance · Scope</td>
+<td><code>uncited-claim</code>. Never auto. X3 responsible AI</td>
+</tr>
+<tr>
+<td>39</td>
+<td><a href="./03.edges/39.edge-auto-move-without-pm.html">Policy bypass</a></td>
+<td>M&amp;C</td>
+<td>Governance</td>
+<td>Overturn. <code>policy-bypass</code> audit</td>
+</tr>
+<tr>
+<td>40</td>
+<td><a href="./03.edges/40.edge-stale-paste-vs-drive.html">Stale paste</a></td>
+<td>Initiating</td>
+<td>Scope · Governance</td>
+<td>Fetch Drive. Chat never wins</td>
+</tr>
+<tr>
+<td>41</td>
+<td><a href="./03.edges/41.edge-jira-git-key-mismatch.html">Jira–Git key</a></td>
+<td>Executing</td>
+<td>Governance</td>
+<td><code>delivery-mismatch</code>. TDM comments process, does not merge</td>
+</tr>
+<tr>
+<td>42</td>
+<td><a href="./03.edges/42.edge-sql-prod-write.html">SQL prod</a></td>
+<td>Executing</td>
+<td>Risk · Governance</td>
+<td>Write <strong>action</strong> rejected. Replica only</td>
+</tr>
+<tr>
+<td>43</td>
+<td><a href="./03.edges/43.edge-batch-classify-exceptions.html">Batch 200</a></td>
+<td>Planning (+ Executing, M&amp;C)</td>
+<td>Governance</td>
+<td>Split by class. Sample greens. No pile-stamp</td>
+</tr>
+<tr>
+<td>44</td>
+<td><a href="./03.edges/44.edge-ready-externally-blocked.html">Ready blocked ext</a></td>
+<td>M&amp;C</td>
+<td>Schedule · Risk</td>
+<td>Status honest. AC stays Ready-quality</td>
+</tr>
+<tr>
+<td>45</td>
+<td><a href="./03.edges/45.edge-pod-bounce-to-sender.html">Pod bounce</a></td>
+<td>M&amp;C</td>
+<td>Scope · Stakeholders</td>
+<td>Bounce to <strong>sender</strong>, not TDM inbox</td>
+</tr>
+<tr>
+<td>46</td>
+<td><a href="./03.edges/46.edge-duplicate-ask.html">Duplicate</a></td>
+<td>Initiating</td>
+<td>Scope · Governance</td>
+<td>Link canonical. Not <code>REJECT</code></td>
+</tr>
+<tr>
+<td>47</td>
+<td><a href="./03.edges/47.edge-defer-wip-unfunded.html">Defer</a></td>
+<td>Planning</td>
+<td>Schedule · Finance · Resources</td>
+<td><code>/park</code>. No fake sender SLA</td>
+</tr>
+<tr>
+<td>48</td>
+<td><a href="./03.edges/48.edge-reject-wrong-artifact.html">Reject</a></td>
+<td>Initiating</td>
+<td>Scope · Governance</td>
+<td>Wrong type closed. Distinct from quarantine/defer</td>
+</tr>
+<tr>
+<td>49</td>
+<td><a href="./03.edges/49.edge-secret-leak.html">Secret</a></td>
+<td>Initiating</td>
+<td>Risk</td>
+<td><code>QUARANTINE</code> + rotate</td>
+</tr>
+<tr>
+<td>50</td>
+<td><a href="./03.edges/50.edge-env-access-blocked.html">Env / ACL</a></td>
+<td>M&amp;C</td>
+<td>Resources · Risk</td>
+<td>Prove path exists, or <code>BLOCKED_EXT</code> / sender <code>REWORK</code></td>
+</tr>
+<tr>
+<td>51</td>
+<td><a href="./03.edges/51.edge-irreversible-change.html">Irreversible</a></td>
+<td>Planning (+ M&amp;C)</td>
+<td>Risk · Governance</td>
+<td>Quality may pass. Commit path always <code>pm</code></td>
+</tr>
+<tr>
+<td>52</td>
+<td><a href="./03.edges/52.edge-silent-sender-dispute.html">Silent / dispute</a></td>
+<td>M&amp;C</td>
+<td>Stakeholders · Governance</td>
+<td>Class stays <code>REWORK</code>. Exception queue only</td>
+</tr>
+</tbody></table>
+<p><strong>23/23 edges mapped.</strong></p>
+<hr>
+<h2>7. Elite scenarios (<a href="./01.architecture/06.classification-and-pm-gate.html">06</a> §4)</h2>
+<table>
+<thead>
+<tr>
+<th>S#</th>
+<th>Class</th>
+<th>Focus</th>
+<th>Domain</th>
+<th>Outcome in one line</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>VERIFIED</code></td>
+<td>Executing</td>
+<td>Governance</td>
+<td>Trusted green auto-Ready. Pod pulls</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>REWORK</code></td>
+<td>Initiating</td>
+<td>Scope · Stakeholders</td>
+<td>CS ping → sender codes, not TDM rewrite</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>CHANGE</code>/<code>DEFER</code></td>
+<td>Planning</td>
+<td>Schedule · Governance</td>
+<td>Full sprint: swap or park</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>REWORK</code></td>
+<td>Planning</td>
+<td>Scope · Stakeholders</td>
+<td>Verbal AC quoted onto ticket or <code>Needs_AC</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>REWORK</code></td>
+<td>Planning</td>
+<td>Scope</td>
+<td>How stripped. Outcome stays</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>REWORK</code></td>
+<td>Planning</td>
+<td>Scope</td>
+<td>Pipeline split to independent AC</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>REWORK</code></td>
+<td>Planning</td>
+<td>Resources</td>
+<td>Two pods → two items or <code>TRADEOFF</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>CONFLICT</code></td>
+<td>M&amp;C</td>
+<td>Scope · Governance</td>
+<td>Human picks Figma vs ticket</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>CONFLICT</code></td>
+<td>Planning</td>
+<td>Governance</td>
+<td>Human picks Drive vs wiki</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>REWORK</code></td>
+<td>Initiating</td>
+<td>Scope</td>
+<td>Canonical Drive fetched</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>QUARANTINE</code></td>
+<td>Initiating</td>
+<td>Risk</td>
+<td>Phones never enter RAG</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>QUARANTINE</code></td>
+<td>Initiating</td>
+<td>Risk</td>
+<td>OCR not verified</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>REWORK</code></td>
+<td>Planning</td>
+<td>Governance</td>
+<td>Invented Gherkin rejected</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>REWORK</code></td>
+<td>Planning</td>
+<td>Scope</td>
+<td>Slices cited, file not stamped</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>TRADEOFF</code></td>
+<td>Initiating</td>
+<td>Scope · Finance</td>
+<td>SoW hole is commercial</td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>DEFER</code>/<code>CHANGE</code></td>
+<td>Initiating</td>
+<td>Scope · Finance</td>
+<td>Extra tickets not silently built</td>
+</tr>
+<tr>
+<td>17</td>
+<td><code>TRADEOFF</code></td>
+<td>Planning</td>
+<td>Stakeholders</td>
+<td>Lead ranks depts. AI does not</td>
+</tr>
+<tr>
+<td>18</td>
+<td><code>BLOCKED_EXT</code></td>
+<td>M&amp;C</td>
+<td>Schedule · Risk</td>
+<td>Board honest after dep slip</td>
+</tr>
+<tr>
+<td>19</td>
+<td><code>REWORK</code></td>
+<td>Planning</td>
+<td>Schedule</td>
+<td>Dep without date is a plan hole</td>
+</tr>
+<tr>
+<td>20</td>
+<td><code>REWORK</code></td>
+<td>M&amp;C</td>
+<td>Scope · Stakeholders</td>
+<td>Pod bounce → sender</td>
+</tr>
+<tr>
+<td>21</td>
+<td><code>REWORK</code></td>
+<td>M&amp;C</td>
+<td>Stakeholders</td>
+<td>SLA miss → exception, class unchanged</td>
+</tr>
+<tr>
+<td>22</td>
+<td><code>REWORK</code></td>
+<td>M&amp;C</td>
+<td>Stakeholders</td>
+<td>Dispute → TDM judgment, then SoT</td>
+</tr>
+<tr>
+<td>23</td>
+<td><code>REWORK</code></td>
+<td>M&amp;C</td>
+<td>Governance</td>
+<td>Third bounce → ladder/rubric, not more TPM clicks</td>
+</tr>
+<tr>
+<td>24</td>
+<td><code>DEFER</code></td>
+<td>Planning</td>
+<td>Schedule</td>
+<td>Tiny ask parked</td>
+</tr>
+<tr>
+<td>25</td>
+<td><code>INCIDENT</code></td>
+<td>Executing</td>
+<td>Risk</td>
+<td>Stabilize. No Ready story from the ping</td>
+</tr>
+<tr>
+<td>26</td>
+<td><code>CHANGE</code>/<code>SPIKE</code></td>
+<td>Planning</td>
+<td>Scope · Risk</td>
+<td>Hardening is new work</td>
+</tr>
+<tr>
+<td>27</td>
+<td><code>SPIKE</code></td>
+<td>Planning</td>
+<td>Scope · Risk</td>
+<td>No eval set → clock, not fake AC</td>
+</tr>
+<tr>
+<td>28</td>
+<td><code>REWORK</code></td>
+<td>Planning</td>
+<td>Scope</td>
+<td>Grain/freshness on the report</td>
+</tr>
+<tr>
+<td>29</td>
+<td><code>REJECT</code> action</td>
+<td>Executing</td>
+<td>Risk</td>
+<td>Prod write refused</td>
+</tr>
+<tr>
+<td>30</td>
+<td><code>irreversible</code></td>
+<td>Planning</td>
+<td>Risk · Governance</td>
+<td>Always <code>pm</code></td>
+</tr>
+<tr>
+<td>31</td>
+<td><code>VERIFIED</code></td>
+<td>Planning</td>
+<td>Governance</td>
+<td>New author → sample/calibrate</td>
+</tr>
+<tr>
+<td>32</td>
+<td><code>DUPLICATE</code></td>
+<td>Initiating</td>
+<td>Scope</td>
+<td>Link OA-123, close twin</td>
+</tr>
+<tr>
+<td>33</td>
+<td><code>DEFER</code></td>
+<td>Planning</td>
+<td>Finance · Schedule</td>
+<td>Unfunded parked</td>
+</tr>
+<tr>
+<td>34</td>
+<td><code>DEFER</code></td>
+<td>Planning</td>
+<td>Resources · Schedule</td>
+<td>WIP law &gt; extra green story</td>
+</tr>
+<tr>
+<td>35</td>
+<td><code>DONE_FAIL</code></td>
+<td>Closing</td>
+<td>Scope</td>
+<td>Evidence or reopen</td>
+</tr>
+<tr>
+<td>36</td>
+<td>Overturn</td>
+<td>M&amp;C</td>
+<td>Governance</td>
+<td>Policy-bypass audited</td>
+</tr>
+<tr>
+<td>37</td>
+<td>mixed</td>
+<td>Planning</td>
+<td>Governance</td>
+<td>Batch split, not stamped</td>
+</tr>
+<tr>
+<td>38</td>
+<td>(none yet)</td>
+<td>Initiating</td>
+<td>Stakeholders</td>
+<td>Packet first</td>
+</tr>
+<tr>
+<td>39</td>
+<td><code>REWORK</code>/<code>BLOCKED_EXT</code></td>
+<td>Planning</td>
+<td>Resources</td>
+<td>No replica → cannot prove D</td>
+</tr>
+<tr>
+<td>40</td>
+<td><code>BLOCKED_EXT</code></td>
+<td>M&amp;C</td>
+<td>Resources · Risk</td>
+<td>401 is board honesty</td>
+</tr>
+</tbody></table>
+<p><strong>40/40 scenarios mapped.</strong></p>
+<hr>
+<h2>8. Reverse index</h2>
+<h3>By Focus Area (primary)</h3>
+<table>
+<thead>
+<tr>
+<th>Focus Area</th>
+<th>Cases</th>
+<th>Edges</th>
+<th>Scenarios</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Initiating</td>
+<td>10, 12, 20, 22</td>
+<td>30, 36, 40, 46, 48, 49</td>
+<td>2, 10–12, 15–16, 32, 38</td>
+</tr>
+<tr>
+<td>Planning</td>
+<td>11, 14, 18, 25, 26</td>
+<td>31–35, 37–38, 43, 47, 51</td>
+<td>3–7, 9, 13–14, 17, 19, 24, 26–28, 30–31, 33–34, 37, 39</td>
+</tr>
+<tr>
+<td>Executing</td>
+<td>15, 24, 27</td>
+<td>41, 42</td>
+<td>1, 25, 29</td>
+</tr>
+<tr>
+<td>M&amp;C</td>
+<td>13, 16, 17, 19, 23</td>
+<td>39, 44, 45, 50, 52</td>
+<td>8, 18, 20–23, 36, 40</td>
+</tr>
+<tr>
+<td>Closing</td>
+<td>21</td>
+<td>—</td>
+<td>35</td>
+</tr>
+</tbody></table>
+<h3>By performance domain (primary emphasis)</h3>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Cases / edges / law</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Governance</strong></td>
+<td>01, 06, 24, 39, 43, 15, 38, 41 · S1, S31, S36, S37</td>
+</tr>
+<tr>
+<td><strong>Scope</strong></td>
+<td>07, 08, 10, 11, 13, 14, 20, 21, 31–34, 45, 46, 48 · most <code>REWORK</code> A–G</td>
+</tr>
+<tr>
+<td><strong>Schedule</strong></td>
+<td>16–18, 25, 44, 47 · S3, S18–19, S24, S34</td>
+</tr>
+<tr>
+<td><strong>Finance</strong></td>
+<td>20, 47, 19 (thin) · S15–16, S33</td>
+</tr>
+<tr>
+<td><strong>Stakeholders</strong></td>
+<td>04, 12, 22, 26, 45, 52 · S2, S4, S17, S20–22, S38</td>
+</tr>
+<tr>
+<td><strong>Resources</strong></td>
+<td>24 (pull), 35, 50 · S7, S34, S39–40</td>
+</tr>
+<tr>
+<td><strong>Risk</strong></td>
+<td>09, 27, 30, 36, 42, 49, 51 · S11–12, S25–27, S29–30</td>
+</tr>
+</tbody></table>
+<p>Architecture: <a href="./01.architecture/02.nucleus-and-parallel-stacks.html">02</a>/<a href="./01.architecture/03.mcp-system-map.html">03</a> = execution tools (X3 AI). <a href="./01.architecture/05.rag-architecture.html">05</a> = <em>Manage Project Knowledge</em> after <code>/verified</code>.</p>
+<hr>
+<h2>9. Interview line</h2>
+<blockquote>
+<p>PMBOK 8 is <strong>principles + seven domains with Check Results + five Focus Areas</strong>. This pack is the TDM <strong>value-delivery system</strong> for five to six pods. Governance is exception-based auto-Ready. Scope is A–G and evidence of Done. Schedule is WIP, spike clocks, and honest Blocked. Stakeholders send red back to the sender. Risk is quarantine and incident — not a Ready story. Finance here is unfunded/SoW, not EVM. Closing is increment evidence. We tailor: adaptive cadence, not a waterfall close.</p>
+</blockquote>
+<h2>Related</h2>
+<ul>
+<li>Law: <a href="./01.architecture/01.operating-model.html">01</a></li>
+<li>Gate: <a href="./01.architecture/06.classification-and-pm-gate.html">06</a></li>
+<li>Landscape: <a href="./00.overall-landscape.html">00</a></li>
+<li>Catalog: <a href="./00.index.html">00.index</a></li>
+<li>PMI: <em>PMBOK® Guide</em> Eighth Edition — Standard ch. 2–4, Guide §2 domains (Check Results), Appendix X3 AI</li>
+</ul>
+</article></main>
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            // Match Cursor / VS Code Markdown preview (dark workbench → mermaid "dark")
+            theme: 'dark',
+            securityLevel: 'loose',
+            flowchart: {
+                htmlLabels: true,
+                curve: 'basis',
+                useMaxWidth: true,
+                padding: 16,
+                nodeSpacing: 24,
+                rankSpacing: 48,
+                diagramPadding: 12
+            },
+            sequence: { useMaxWidth: false, diagramMarginX: 40, diagramMarginY: 20, actorMargin: 50, boxMargin: 10 },
+            er: { useMaxWidth: false },
+            gantt: { useMaxWidth: false },
+            journey: { useMaxWidth: false },
+            timeline: { useMaxWidth: false },
+            class: { useMaxWidth: false },
+            state: { useMaxWidth: false },
+            pie: { useMaxWidth: false },
+            mindmap: { useMaxWidth: false }
+        });
+
+        async function renderMermaid() {
+            const nodes = [...document.querySelectorAll('pre.mermaid')];
+            for (const el of nodes) {
+                const code = (el.textContent || '').trim();
+                if (!code) continue;
+                try {
+                    const id = 'mmd-' + Math.random().toString(36).slice(2);
+                    const { svg } = await mermaid.render(id, code);
+
+                    const stage = document.createElement('div');
+                    stage.className = 'mermaid-stage';
+
+                    const toolbar = document.createElement('div');
+                    toolbar.className = 'mermaid-toolbar';
+                    toolbar.innerHTML = [
+                        '<button type="button" data-act="zoom-out" title="Zoom out">−</button>',
+                        '<input class="zoom-input" type="number" min="5" max="500" step="5" value="100" title="Type zoom % then Enter" aria-label="Zoom percent">',
+                        '<span class="zoom-suffix">%</span>',
+                        '<button type="button" data-act="zoom-in" title="Zoom in">+</button>',
+                        '<button type="button" data-act="reset" title="Reset view">⟲</button>',
+                        '<button type="button" data-act="fullscreen" title="Fullscreen">⛶</button>'
+                    ].join('');
+
+                    const hint = document.createElement('div');
+                    hint.className = 'mermaid-hint';
+                    hint.textContent = 'Scroll zoom · Drag pan · Type % · ⛶ fullscreen';
+
+                    const viewport = document.createElement('div');
+                    viewport.className = 'mermaid-viewport';
+
+                    const wrap = document.createElement('div');
+                    wrap.className = 'mermaid';
+                    wrap.innerHTML = svg;
+                    const svgEl = wrap.querySelector('svg');
+                    if (svgEl) {
+                        svgEl.removeAttribute('height');
+                        svgEl.setAttribute('width', '100%');
+                        svgEl.style.maxWidth = '100%';
+                        svgEl.style.width = '100%';
+                        svgEl.style.height = 'auto';
+                    }
+
+                    viewport.appendChild(wrap);
+                    stage.appendChild(toolbar);
+                    stage.appendChild(hint);
+                    stage.appendChild(viewport);
+                    el.replaceWith(stage);
+
+                    const pz = Panzoom(wrap, {
+                        maxScale: 5,
+                        minScale: 0.05,
+                        // No contain — free zoom/pan (contain:'outside' locked min by diagram size)
+                        cursor: 'grab'
+                    });
+                    viewport.addEventListener('wheel', pz.zoomWithWheel);
+                    const zoomInput = toolbar.querySelector('.zoom-input');
+                    let syncing = false;
+                    const syncZoom = () => {
+                        if (!zoomInput || syncing) return;
+                        syncing = true;
+                        zoomInput.value = String(Math.round(pz.getScale() * 100));
+                        syncing = false;
+                    };
+                    const fitView = () => {
+                        const svg = wrap.querySelector('svg');
+                        if (!svg) return;
+                        pz.reset({ animate: false });
+                        // Fullscreen: fit both axes. Inline: keep width 100% (Markdown-preview style).
+                        if (!stage.classList.contains('is-fullscreen')) {
+                            syncZoom();
+                            return;
+                        }
+                        const bbox = svg.getBBox();
+                        const pad = 72;
+                        const sx = (viewport.clientWidth - pad) / Math.max(bbox.width, 1);
+                        const sy = (viewport.clientHeight - pad) / Math.max(bbox.height, 1);
+                        const scale = Math.max(0.05, Math.min(sx, sy, 1));
+                        pz.zoom(scale, { animate: false });
+                        requestAnimationFrame(() => {
+                            const wr = wrap.getBoundingClientRect();
+                            const vr = viewport.getBoundingClientRect();
+                            const pan = pz.getPan();
+                            pz.pan(
+                                pan.x + (vr.left + vr.width / 2) - (wr.left + wr.width / 2),
+                                pan.y + (vr.top + vr.height / 2) - (wr.top + wr.height / 2),
+                                { animate: false }
+                            );
+                            syncZoom();
+                        });
+                    };
+                    const applyZoomPct = () => {
+                        if (!zoomInput) return;
+                        let pct = Number(zoomInput.value);
+                        if (!Number.isFinite(pct)) pct = 100;
+                        pct = Math.min(500, Math.max(5, Math.round(pct)));
+                        zoomInput.value = String(pct);
+                        pz.zoom(pct / 100, { animate: true });
+                    };
+                    requestAnimationFrame(() => requestAnimationFrame(fitView));
+                    zoomInput.addEventListener('keydown', (ev) => {
+                        if (ev.key === 'Enter') {
+                            ev.preventDefault();
+                            applyZoomPct();
+                            zoomInput.blur();
+                        }
+                        // Don't let panzoom / page steal keys while typing
+                        ev.stopPropagation();
+                    });
+                    zoomInput.addEventListener('change', applyZoomPct);
+                    zoomInput.addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        zoomInput.select();
+                    });
+                    wrap.addEventListener('panzoomchange', syncZoom);
+                    toolbar.addEventListener('click', (ev) => {
+                        const btn = ev.target.closest('button[data-act]');
+                        if (!btn) return;
+                        const act = btn.dataset.act;
+                        if (act === 'zoom-in') pz.zoomIn();
+                        if (act === 'zoom-out') pz.zoomOut();
+                        if (act === 'reset') { fitView(); return; }
+                        if (act === 'fullscreen') {
+                            const on = stage.classList.toggle('is-fullscreen');
+                            btn.title = on ? 'Exit fullscreen (Esc)' : 'Fullscreen';
+                            btn.textContent = on ? '✕' : '⛶';
+                            document.body.style.overflow = on ? 'hidden' : '';
+                            requestAnimationFrame(() => fitView());
+                            return;
+                        }
+                        syncZoom();
+                    });
+                    document.addEventListener('keydown', (ev) => {
+                        if (ev.key === 'Escape' && stage.classList.contains('is-fullscreen')) {
+                            stage.classList.remove('is-fullscreen');
+                            const fsBtn = toolbar.querySelector('[data-act="fullscreen"]');
+                            if (fsBtn) { fsBtn.textContent = '⛶'; fsBtn.title = 'Fullscreen'; }
+                            document.body.style.overflow = '';
+                            requestAnimationFrame(() => fitView());
+                        }
+                    });
+                } catch (err) {
+                    el.classList.add('mermaid-error');
+                    el.textContent = 'Mermaid error: ' + (err && err.message ? err.message : String(err)) + '\n\n' + code;
+                    console.error('Mermaid failed:', err);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await renderMermaid();
+
+            document.querySelectorAll('.code-panel .code-copy').forEach((btn) => {
+                btn.addEventListener('click', async () => {
+                    const panel = btn.closest('.code-panel');
+                    const codeEl = panel?.querySelector('code');
+                    const text = codeEl?.textContent || '';
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        btn.textContent = 'Copied';
+                        btn.classList.add('is-copied');
+                        setTimeout(() => {
+                            btn.textContent = 'Copy';
+                            btn.classList.remove('is-copied');
+                        }, 1400);
+                    } catch {
+                        btn.textContent = 'Failed';
+                        setTimeout(() => { btn.textContent = 'Copy'; }, 1400);
+                    }
+                });
+            });
+
+            const sidebar = document.getElementById('sidebar');
+            const STORAGE_KEY = 'ai-pm-nav-open';
+            const currentUrl = new URL(window.location.href);
+
+            function loadOpenSet() {
+                try { return new Set(JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]')); }
+                catch { return new Set(); }
+            }
+            function saveOpenSet(set) {
+                sessionStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+            }
+
+            let openSet = loadOpenSet();
+
+            function setOpen(folder, open) {
+                const id = folder.dataset.navId;
+                folder.classList.toggle('open', open);
+                folder.querySelector('.folder-toggle')?.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (open) openSet.add(id); else openSet.delete(id);
+                saveOpenSet(openSet);
+            }
+
+            document.querySelectorAll('.nav-folder[data-nav-id]').forEach(folder => {
+                if (openSet.has(folder.dataset.navId)) setOpen(folder, true);
+            });
+
+            document.querySelectorAll('.folder-toggle').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const folder = btn.closest('.nav-folder');
+                    setOpen(folder, !folder.classList.contains('open'));
+                });
+            });
+
+            document.querySelectorAll('.nav-item').forEach(link => {
+                const linkUrl = new URL(link.href);
+                if (currentUrl.pathname === linkUrl.pathname) {
+                    link.classList.add('active');
+                    let parent = link.closest('.nav-folder');
+                    while (parent) {
+                        setOpen(parent, true);
+                        parent = parent.parentElement?.closest('.nav-folder');
+                    }
+                    link.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+            });
+
+            const saved = sessionStorage.getItem('sb-scroll');
+            if (saved) sidebar.scrollTop = parseInt(saved);
+            sidebar.onscroll = () => sessionStorage.setItem('sb-scroll', sidebar.scrollTop);
+        });
+    </script>
+</body>
+</html>

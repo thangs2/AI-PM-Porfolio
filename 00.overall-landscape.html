@@ -1,0 +1,1105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>00.overall-landscape.md | AI PM Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown-light.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <style>
+        :root { --sidebar-width: 380px; --primary-color: #0969da; --sidebar-bg: #f6f8fa; --border-color: #d0d7de; }
+        body { margin: 0; display: flex; font-family: -apple-system, sans-serif; background: #fff; }
+        #sidebar { width: var(--sidebar-width); height: 100vh; overflow-y: auto; border-right: 1px solid var(--border-color); background: var(--sidebar-bg); padding: 30px 20px; position: fixed; box-sizing: border-box; z-index: 100; }
+        .nav-folder { margin-top: 8px; list-style: none; padding: 0; }
+        .folder-toggle {
+            display: flex; align-items: center; gap: 6px; width: 100%;
+            font-size: 12px; font-weight: 700; color: #656d76; padding: 6px 10px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            background: transparent; border: none; border-radius: 6px; cursor: pointer; text-align: left;
+        }
+        .folder-toggle:hover { background: #ebeff2; color: #1f2328; }
+        .folder-toggle .chevron {
+            display: inline-flex; width: 14px; height: 14px; flex-shrink: 0;
+            transition: transform 0.15s ease; color: #8c959f;
+        }
+        .nav-folder.open > .folder-toggle .chevron { transform: rotate(90deg); }
+        .nav-sub-tree {
+            list-style: none; padding-left: 15px; margin: 2px 0 6px;
+            border-left: 1px solid var(--border-color); display: none;
+        }
+        .nav-folder.open > .nav-sub-tree { display: block; }
+        .nav-item { display: block; padding: 6px 12px; font-size: 13px; color: #1f2328 !important; text-decoration: none !important; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+        .nav-item:hover { background: #ebeff2; }
+        .nav-item.active { background: var(--primary-color) !important; color: #fff !important; font-weight: bold; box-shadow: 0 2px 4px rgba(9, 105, 218, 0.3); }
+        #content { margin-left: var(--sidebar-width); padding: 60px 80px; width: calc(100% - var(--sidebar-width)); box-sizing: border-box; }
+        .markdown-body { max-width: 1100px; margin: 0 auto; }
+        .mermaid-stage {
+            position: relative;
+            margin: 30px 0;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            background: #1e1e1e;
+            overflow: hidden;
+        }
+        .mermaid-stage.is-fullscreen {
+            position: fixed; inset: 0; z-index: 9999; margin: 0; border-radius: 0;
+            border: none; background: #0d1117;
+        }
+        .mermaid-toolbar {
+            position: absolute; top: 10px; right: 10px; z-index: 5;
+            display: flex; gap: 4px; padding: 4px;
+            background: rgba(22, 27, 34, 0.92); border: 1px solid #30363d; border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+        }
+        .mermaid-toolbar button {
+            appearance: none; border: none; cursor: pointer;
+            width: 32px; height: 32px; border-radius: 6px;
+            background: transparent; color: #e6edf3; font-size: 16px; line-height: 1;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .mermaid-toolbar button:hover { background: #30363d; }
+        .mermaid-toolbar .zoom-input {
+            width: 52px; height: 32px; box-sizing: border-box;
+            text-align: center; color: #e6edf3; background: #0d1117;
+            border: 1px solid #30363d; border-radius: 6px;
+            font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+            padding: 0 2px; outline: none;
+        }
+        .mermaid-toolbar .zoom-input:focus { border-color: #58a6ff; }
+        .mermaid-toolbar .zoom-suffix {
+            color: #8b949e; font: 12px/32px ui-monospace, SFMono-Regular, Menlo, monospace;
+            padding-right: 4px; user-select: none;
+        }
+        .mermaid-hint {
+            position: absolute; left: 12px; bottom: 10px; z-index: 5;
+            color: #8b949e; font-size: 11px; pointer-events: none;
+            background: rgba(22, 27, 34, 0.75); padding: 2px 8px; border-radius: 4px;
+        }
+        .mermaid-stage.is-fullscreen .mermaid-hint { display: none; }
+        .mermaid-viewport {
+            height: auto;
+            overflow: auto;
+            cursor: grab;
+            touch-action: none;
+            padding-top: 52px;
+            padding-bottom: 28px;
+        }
+        .mermaid-stage.is-fullscreen .mermaid-viewport {
+            height: 100vh;
+            overflow: hidden;
+        }
+        .mermaid-viewport:active { cursor: grabbing; }
+        .mermaid {
+            background: transparent; border: none; border-radius: 0;
+            padding: 24px; margin: 0; overflow: visible; text-align: center;
+            line-height: normal; color: #e6edf3;
+            width: 100%;
+            min-width: 0;
+            transform-origin: 0 0;
+        }
+        .mermaid svg {
+            max-width: 100% !important;
+            width: 100%;
+            height: auto !important;
+            display: block;
+            vertical-align: middle;
+        }
+        /* Structural only — never force node/label colors (classDef must win) */
+        .mermaid foreignObject div {
+            display: inline-block;
+            white-space: nowrap;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+        /* Soft nested clusters: keep Mermaid dark gray, make it translucent */
+        .mermaid .cluster rect {
+            fill-opacity: 0.45;
+        }
+        .mermaid-error { border-color: #cf222e; background: #fff8f8; color: #82071e; font-family: ui-monospace, Menlo, monospace; font-size: 12px; text-align: left; white-space: pre-wrap; margin: 30px 0; padding: 16px; border: 1px solid; border-radius: 8px; }
+
+        /* IDE-friendly code panels (LLD snippets) */
+        .markdown-body .code-panel {
+            margin: 1.25em 0 1.75em;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            background: #0d1117;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+        }
+        .markdown-body .code-panel-header {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; padding: 8px 12px;
+            background: #161b22; border-bottom: 1px solid #30363d;
+        }
+        .markdown-body .code-lang {
+            font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+            color: #79c0ff; letter-spacing: 0.01em;
+            background: #21262d; border: 1px solid #30363d;
+            border-radius: 999px; padding: 4px 10px;
+            text-transform: none;
+        }
+        .markdown-body .code-copy {
+            appearance: none; cursor: pointer;
+            font: 600 11px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #e6edf3; background: #21262d; border: 1px solid #30363d;
+            border-radius: 6px; padding: 6px 10px;
+        }
+        .markdown-body .code-copy:hover { background: #30363d; border-color: #8b949e; }
+        .markdown-body .code-copy.is-copied {
+            color: #3fb950; border-color: #238636; background: rgba(35, 134, 54, 0.15);
+        }
+        .markdown-body .code-panel-body {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            max-height: min(70vh, 640px);
+            overflow: auto;
+            background: #0d1117;
+        }
+        .markdown-body .code-lines {
+            user-select: none; text-align: right;
+            padding: 14px 0 14px 12px; min-width: 2.5em;
+            border-right: 1px solid #21262d; background: #0d1117;
+            font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            color: #484f58;
+        }
+        .markdown-body .code-lines span { display: block; padding-right: 12px; }
+        .markdown-body .code-pre {
+            margin: 0 !important; padding: 14px 16px !important;
+            background: transparent !important; border: none !important;
+            overflow: visible !important; border-radius: 0 !important;
+        }
+        .markdown-body .code-pre code {
+            display: block; padding: 0 !important; background: transparent !important;
+            font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+            color: #e6edf3; white-space: pre; tab-size: 4;
+        }
+        .markdown-body pre:not(.mermaid):not(.code-pre) {
+            /* fallback plain pre */
+            background: #0d1117; color: #e6edf3; border-radius: 10px; border: 1px solid #30363d;
+        }
+    </style>
+</head>
+<body>
+    <nav id="sidebar">
+        <h1 style="font-size:20px;margin-bottom:20px;font-weight:600;">Le Tat Thang</h1>
+        <ul style="list-style:none;padding:0;margin:0;"><li><a href="00.index.html" class="nav-item">00. Index</a></li><li><a href="00.overall-landscape.html" class="nav-item">00. Overall Landscape</a></li><li><a href="01.pmp-phase-mapping.html" class="nav-item">01. PMP Phase Mapping</a></li><li class="nav-folder" data-nav-id="01.architecture"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>01. Architecture</span></button><ul class="nav-sub-tree"><li><a href="01.architecture/01.operating-model.html" class="nav-item">01. Operating Model</a></li><li><a href="01.architecture/02.nucleus-and-parallel-stacks.html" class="nav-item">02. Nucleus And Parallel Stacks</a></li><li><a href="01.architecture/02b.claude-ai-nucleus.html" class="nav-item">02b. Claude AI Nucleus</a></li><li><a href="01.architecture/03.mcp-system-map.html" class="nav-item">03. MCP System Map</a></li><li><a href="01.architecture/04.departments-actors.html" class="nav-item">04. Departments Actors</a></li><li><a href="01.architecture/05.rag-architecture.html" class="nav-item">05. Rag Architecture</a></li><li><a href="01.architecture/06.classification-and-pm-gate.html" class="nav-item">06. Classification And Pm Gate</a></li><li><a href="01.architecture/07.rubric-document.html" class="nav-item">07. Rubric Document</a></li><li><a href="01.architecture/08.rubric-jira.html" class="nav-item">08. Rubric Jira</a></li><li><a href="01.architecture/09.security-pii-governance.html" class="nav-item">09. Security PII Governance</a></li></ul></li><li class="nav-folder" data-nav-id="02.cases"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>02. Cases</span></button><ul class="nav-sub-tree"><li><a href="02.cases/10.case-document-intake-verify.html" class="nav-item">10. Document Intake Verify</a></li><li><a href="02.cases/11.case-jira-hierarchy-quality.html" class="nav-item">11. Jira Hierarchy Quality</a></li><li><a href="02.cases/12.case-meet-to-ready.html" class="nav-item">12. Meet To Ready</a></li><li><a href="02.cases/13.case-figma-ticket-drift.html" class="nav-item">13. Figma Ticket Drift</a></li><li><a href="02.cases/14.case-sot-conflict.html" class="nav-item">14. SOT Conflict</a></li><li><a href="02.cases/15.case-pr-ci-vs-ticket.html" class="nav-item">15. PR CI Vs Ticket</a></li><li><a href="02.cases/16.case-status-pack.html" class="nav-item">16. Status Pack</a></li><li><a href="02.cases/17.case-dependency-blocked.html" class="nav-item">17. Dependency Blocked</a></li><li><a href="02.cases/18.case-mid-sprint-change.html" class="nav-item">18. Mid Sprint Change</a></li><li><a href="02.cases/19.case-data-sql-excel-report.html" class="nav-item">19. Data SQL Excel Report</a></li><li><a href="02.cases/20.case-sow-assessment-vs-backlog.html" class="nav-item">20. SOW Assessment Vs Backlog</a></li><li><a href="02.cases/21.case-dod-evidence.html" class="nav-item">21. DOD Evidence</a></li><li><a href="02.cases/22.case-dontpassmessage.html" class="nav-item">22. Dontpassmessage</a></li><li><a href="02.cases/23.case-weekly-blocked-scan.html" class="nav-item">23. Weekly Blocked Scan</a></li><li><a href="02.cases/24.case-auto-ready-vs-pm-exception.html" class="nav-item">24. Auto Ready Vs Pm Exception</a></li><li><a href="02.cases/25.case-spike-timebox.html" class="nav-item">25. Spike Timebox</a></li><li><a href="02.cases/26.case-dept-tradeoff.html" class="nav-item">26. Dept Tradeoff</a></li><li><a href="02.cases/27.case-incident-not-story.html" class="nav-item">27. Incident Not Story</a></li></ul></li><li class="nav-folder" data-nav-id="03.edges"><button type="button" class="folder-toggle" aria-expanded="false"><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg><span>03. Edges</span></button><ul class="nav-sub-tree"><li><a href="03.edges/30.edge-unreadable-ocr.html" class="nav-item">30. Unreadable OCR</a></li><li><a href="03.edges/31.edge-huge-doc-thin-signal.html" class="nav-item">31. Huge Doc Thin Signal</a></li><li><a href="03.edges/32.edge-meeting-verbal-ac.html" class="nav-item">32. Meeting Verbal AC</a></li><li><a href="03.edges/33.edge-ac-is-how.html" class="nav-item">33. AC Is How</a></li><li><a href="03.edges/34.edge-epic-as-one-story.html" class="nav-item">34. Epic As One Story</a></li><li><a href="03.edges/35.edge-subtask-two-pods.html" class="nav-item">35. Subtask Two Pods</a></li><li><a href="03.edges/36.edge-pii-quarantine.html" class="nav-item">36. PII Quarantine</a></li><li><a href="03.edges/37.edge-filename-version-chaos.html" class="nav-item">37. Filename Version Chaos</a></li><li><a href="03.edges/38.edge-ai-hallucinated-ac.html" class="nav-item">38. AI Hallucinated AC</a></li><li><a href="03.edges/39.edge-auto-move-without-pm.html" class="nav-item">39. Auto Move Without Pm</a></li><li><a href="03.edges/40.edge-stale-paste-vs-drive.html" class="nav-item">40. Stale Paste Vs Drive</a></li><li><a href="03.edges/41.edge-jira-git-key-mismatch.html" class="nav-item">41. Jira Git Key Mismatch</a></li><li><a href="03.edges/42.edge-sql-prod-write.html" class="nav-item">42. SQL Prod Write</a></li><li><a href="03.edges/43.edge-batch-classify-exceptions.html" class="nav-item">43. Batch Classify Exceptions</a></li><li><a href="03.edges/44.edge-ready-externally-blocked.html" class="nav-item">44. Ready Externally Blocked</a></li><li><a href="03.edges/45.edge-pod-bounce-to-sender.html" class="nav-item">45. Pod Bounce To Sender</a></li><li><a href="03.edges/46.edge-duplicate-ask.html" class="nav-item">46. Duplicate Ask</a></li><li><a href="03.edges/47.edge-defer-wip-unfunded.html" class="nav-item">47. Defer Wip Unfunded</a></li><li><a href="03.edges/48.edge-reject-wrong-artifact.html" class="nav-item">48. Reject Wrong Artifact</a></li><li><a href="03.edges/49.edge-secret-leak.html" class="nav-item">49. Secret Leak</a></li><li><a href="03.edges/50.edge-env-access-blocked.html" class="nav-item">50. Env Access Blocked</a></li><li><a href="03.edges/51.edge-irreversible-change.html" class="nav-item">51. Irreversible Change</a></li><li><a href="03.edges/52.edge-silent-sender-dispute.html" class="nav-item">52. Silent Sender Dispute</a></li></ul></li></ul>
+    </nav>
+    <main id="content"><article class="markdown-body"><h1>00 — Overall landscape</h1>
+<p>One map of the AI TDM operating system: <strong>zones</strong>, <strong>components</strong>, <strong>in / out</strong>. Detail lives in mapping <a href="./01.pmp-phase-mapping.html"><code>01</code></a>, architecture <code>01</code>–<code>09</code>, cases <code>10</code>–<code>27</code>, edges <code>30</code>–<code>52</code>. This file is the picture you hold in your head.</p>
+<p>Law (from <a href="./01.architecture/01.operating-model.html">01</a>): AI reads, classifies, drafts. Green auto-commits. Red returns to <strong>sender</strong>. PM owns <strong>exceptions + the rule</strong>. Nucleus is <strong>never</strong> the source of truth.</p>
+<p><strong>Cockpit is swappable.</strong> Diagrams below use Cursor as the default Zone 3. Company-Claude map: <a href="#3b--claude-alternative-zone-3-swap">§3b</a> and <a href="./01.architecture/02b.claude-ai-nucleus.html">02b</a>. Zones 1, 5, 6 stay the same.</p>
+<hr>
+<h2>1. Zones (left → right)</h2>
+<p>Work enters on the left, gets judged in the center, lands on the right. People sit <strong>outside</strong> the nucleus: senders on the source side, pods and leads on the destination side.</p>
+<p>Each zone is a <strong>vertical column</strong>. Happy path is left → right. Red bounce and quarantine curve back to the sender. Pod <strong>pulls</strong> Ready (never waits TDM); the Dept Head gets the status pack.</p>
+<pre class="mermaid">flowchart LR
+  subgraph Z0 ["ZONE 0 — People"]
+    direction TB
+    Sender[Sender&lt;br/&gt;CS / Mkt / Fraud / Pay / BA]
+    TDM[TDM&lt;br/&gt;policy + exceptions]
+    Pod[Technical pod&lt;br/&gt;pull Ready · never wait TDM]
+    Lead[Dept Head&lt;br/&gt;status / trade-off]
+  end
+
+  subgraph Z1 ["ZONE 1 — Source systems"]
+    direction TB
+    Meet[Meet / transcript]
+    Drive[Drive / Teams files]
+    Slack[Slack / Lark ping]
+    FigIn[Figma]
+    GitIn[Git / CI]
+    SqlIn[SQL / Excel / CSV]
+    JiraIn[Jira Intake]
+    WikiIn[Notion / Confluence]
+  end
+
+  subgraph Z2 ["ZONE 2 — Pipes"]
+    MCP[MCP / Claude connectors]
+  end
+
+  subgraph Z3 ["ZONE 3 — Nucleus  ★ not SoT · cockpit swappable"]
+    direction TB
+    Cursor[Cursor cockpit]
+    DS[DeepSeek v4]
+    AM[AgentMemory]
+    CG[CodeGraph]
+    ClaudeAlt[claude.ai Project&lt;br/&gt;see 02b]
+  end
+
+  subgraph Z4 ["ZONE 4 — Project memory"]
+    RAG[RAG collections]
+  end
+
+  subgraph Z5 ["ZONE 5 — Gate"]
+    direction TB
+    Class[Classifier A-G]
+    Auto[Auto Ready]
+    Rework[Bounce sender]
+    Exc[PM exception]
+    Q[Quarantine]
+  end
+
+  subgraph Z6 ["ZONE 6 — Destinations / SoT"]
+    direction TB
+    JiraR[Jira Ready]
+    DriveV[Drive /verified]
+    Wiki[Published MoM / ADR]
+    Status[Status pack]
+    Audit[Audit log]
+  end
+
+  Sender --&gt;|raw ask / files| Meet
+  Meet --&gt;|read| MCP
+  MCP --&gt;|payload| Cursor
+  MCP --&gt;|payload| ClaudeAlt
+  Cursor --&gt; DS
+  Cursor --&gt; AM
+  Cursor --&gt; CG
+  DS --&gt; RAG
+  ClaudeAlt --&gt; RAG
+  RAG --&gt; Class
+  DS --&gt; Class
+  Class --&gt; Auto
+  Class --&gt; Rework
+  Class --&gt; Exc
+  Class --&gt; Q
+  Auto --&gt;|write policy| JiraR
+  Exc --&gt;|PM OK| JiraR
+  Rework --&gt;|Needs_AC| Sender
+  TDM -.-&gt;|owns policy / samples / yellow| Exc
+  Q -.-&gt;|Security| Sender</pre>
+<p>Parallel cockpits bind the <strong>same</strong> Zone 2 and Zone 6. They do not get their own SoT.</p>
+<ul>
+<li>Cursor canonical: <a href="./01.architecture/02.nucleus-and-parallel-stacks.html">02</a></li>
+<li><strong>claude.ai / Desktop / Code swap:</strong> <a href="./01.architecture/02b.claude-ai-nucleus.html">02b</a> · <a href="#3b--claude-alternative-zone-3-swap">§3b</a></li>
+</ul>
+<hr>
+<h2>2. What each zone is</h2>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>Name</th>
+<th>Job</th>
+<th>Lives here</th>
+<th>Does <strong>not</strong> live here</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>0</strong></td>
+<td>People</td>
+<td>Intent, judgment, pull</td>
+<td>Senders, TDM, pods, leads</td>
+<td>Model weights, Jira JSON</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>Source</td>
+<td>Raw signal</td>
+<td>Meet, Drive, Slack, Figma, Git, SQL, Jira stubs, wiki drafts</td>
+<td>“Verified truth”</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>Pipes</td>
+<td>Typed I/O</td>
+<td>MCP servers <strong>or</strong> Claude connectors</td>
+<td>Policy / rubric</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>Nucleus</td>
+<td>Orchestrate + reason</td>
+<td><strong>Either</strong> Cursor+DeepSeek+AgentMemory+CodeGraph <strong>or</strong> claude.ai Project+Claude+Memory (<a href="./01.architecture/02b.claude-ai-nucleus.html">02b</a>)</td>
+<td>Canonical AC, signed PRD</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>Memory</td>
+<td>Retrieve-with-cite</td>
+<td>RAG collections</td>
+<td>Git blobs, PII, unverified intake</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>Gate</td>
+<td>Class + commit path</td>
+<td>Rubric, auto / bounce / exception</td>
+<td>Sprint assignment</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td>Destination</td>
+<td>Systems of record</td>
+<td>Ready, <code>/verified</code>, published wiki, status, audit</td>
+<td>Cursor chat <strong>or</strong> Claude Project chat</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>3. Nucleus — components (the core)</h2>
+<p>Cursor is the <strong>cockpit</strong>. Everything else is a tool the cockpit calls. None of these is the legal source of truth.</p>
+<pre class="mermaid">flowchart TB
+  subgraph nucleus ["Nucleus — working brain"]
+    Cursor["Cursor&lt;br/&gt;session · tool calls · HITL"]
+    DS["DeepSeek v4&lt;br/&gt;rubric · MoM · JSON class"]
+    AM["AgentMemory&lt;br/&gt;how we work · trusted authors"]
+    CG["CodeGraph / Sourcegraph&lt;br/&gt;callers · blast radius"]
+    RAG["RAG router&lt;br/&gt;cite chunks from Zone 4"]
+    MCP["MCP clients&lt;br/&gt;Zone 2"]
+  end
+
+  Cursor --&gt; DS
+  Cursor --&gt; AM
+  Cursor --&gt; CG
+  Cursor --&gt; RAG
+  Cursor --&gt; MCP</pre>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>In</th>
+<th>Out</th>
+<th>Forbidden out</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Cursor</strong></td>
+<td>PM intent, MCP payloads, RAG chunks</td>
+<td>Tool calls, drafts, apply-policy</td>
+<td>Becoming SoT</td>
+</tr>
+<tr>
+<td><strong>DeepSeek v4</strong></td>
+<td>Artifact + rubric + citations</td>
+<td>Class, reason codes, confidence, suggested AC <strong>only if cited</strong></td>
+<td>Silent Ready; invented AC</td>
+</tr>
+<tr>
+<td><strong>AgentMemory</strong></td>
+<td>Retro / convention after PM OK</td>
+<td>“Fraud hates Slack-assign”, trusted-author list</td>
+<td>Override Jira AC</td>
+</tr>
+<tr>
+<td><strong>CodeGraph</strong></td>
+<td>Repo index</td>
+<td>Impact of a metric/code change</td>
+<td>Sprint status; merge</td>
+</tr>
+<tr>
+<td><strong>RAG</strong></td>
+<td><code>/verified</code> + published MoM + ticket snapshots</td>
+<td>Cited chunks</td>
+<td>Unverified Drive; PII; full Git</td>
+</tr>
+</tbody></table>
+<p>Optional siblings (not nucleus): <strong>claude.ai / Claude Desktop / Claude Code</strong> = other cockpits, full map in <a href="./01.architecture/02b.claude-ai-nucleus.html">02b</a>. Windsurf / Copilot / NotebookLM = not the operating system.</p>
+<hr>
+<h2>3b — Claude alternative (Zone 3 swap)</h2>
+<p>Company lock on <strong>claude.ai</strong> does not rewrite the landscape. Only the <strong>cockpit + reasoner + working memory</strong> move. Sources, gate, destinations stay.</p>
+<pre class="mermaid">flowchart LR
+  subgraph z1 [Zone 1 sources]
+    Src[Meet Drive Jira Slack Figma Git SQL]
+  end
+
+  subgraph z3c ["Zone 3 — Claude.ai  ★ not SoT"]
+    Proj[Project OpAnalysts TDM]
+    Model[Claude Opus / Sonnet]
+    CMem[Claude Memory]
+    Know[Project knowledge&lt;br/&gt;verified only]
+    Conn[Connectors]
+  end
+
+  subgraph z5 [Zone 5 gate]
+    G[auto / sender bounce / PM exception]
+  end
+
+  subgraph z6 [Zone 6 SoT]
+    Dest[Jira Ready · /verified · wiki · status]
+  end
+
+  subgraph gap [Not on claude.ai web]
+    SG[Sourcegraph / pod]
+    Jobs[Batch / auto-write MCP]
+  end
+
+  Src --&gt; Conn --&gt; Proj
+  Src --&gt;|attach / paste| Proj
+  Proj --&gt; Model
+  Model --&gt; CMem
+  Model --&gt; Know
+  Model --&gt; G --&gt; Dest
+  SG -.-&gt;|blast radius| Model
+  Jobs -.-&gt;|when IT allows Desktop or Code| Dest</pre>
+<table>
+<thead>
+<tr>
+<th>Cursor piece</th>
+<th>Claude.ai stand-in</th>
+<th>Lost if web-only</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cursor</td>
+<td><strong>Project</strong> as the daily session</td>
+<td>Long tool loops</td>
+</tr>
+<tr>
+<td>DeepSeek v4</td>
+<td><strong>Claude</strong> (Opus/Sonnet)</td>
+<td>Nothing — one model is enough</td>
+</tr>
+<tr>
+<td>AgentMemory</td>
+<td>Project instructions + Claude Memory + <strong>wiki runbook</strong></td>
+<td>Shared “how we work” if you forget the wiki</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>Project knowledge + connector search</td>
+<td>Named collections, ingest pipeline</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>IT <strong>connectors</strong></td>
+<td>Jira/Figma/Git write, CodeGraph</td>
+</tr>
+<tr>
+<td>CodeGraph</td>
+<td>—</td>
+<td>Blast radius → Sourcegraph or pod</td>
+</tr>
+</tbody></table>
+<p><strong>claude.ai ≠ Claude Code ≠ Claude Desktop.</strong> Web = classify/draft (Phase 0 of <a href="./02.cases/24.case-auto-ready-vs-pm-exception.html">24</a>). Desktop/Code = same pipes as Cursor. Detail and Project instruction paste: <a href="./01.architecture/02b.claude-ai-nucleus.html">02b</a>.</p>
+<p>Pipes diagram in §5: read <code>C</code> as <strong>Cursor or Claude Project</strong>. Write still policy-gated.</p>
+<hr>
+<h2>4. Source → destination (who writes what)</h2>
+<table>
+<thead>
+<tr>
+<th>Source (Zone 1 in)</th>
+<th>Typical artifact</th>
+<th>Destination (Zone 6 out)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Drive / Teams</td>
+<td>docx, pdf, csv, image</td>
+<td><code>/verified</code> or <code>/rework/{code}</code></td>
+<td>RAG ingest <strong>after</strong> <code>/verified</code> · <a href="./02.cases/10.case-document-intake-verify.html">10</a></td>
+</tr>
+<tr>
+<td>Meet</td>
+<td>Transcript / Gemini notes</td>
+<td>Published MoM + Jira <strong>Intake</strong> stubs</td>
+<td><strong>Never</strong> Ready from the meeting · <a href="./02.cases/12.case-meet-to-ready.html">12</a></td>
+</tr>
+<tr>
+<td>Slack / Lark</td>
+<td>DontPassMessage</td>
+<td>Intake ticket or bounce</td>
+<td>Context + impact + ask · <a href="./02.cases/22.case-dontpassmessage.html">22</a></td>
+</tr>
+<tr>
+<td>Jira</td>
+<td>Feature / Epic / Story dump</td>
+<td>Ready <strong>or</strong> Needs_AC → sender</td>
+<td>Hierarchy + A–G · <a href="./02.cases/11.case-jira-hierarchy-quality.html">11</a></td>
+</tr>
+<tr>
+<td>Figma</td>
+<td>Frame / comments</td>
+<td>Ticket AC aligned or <code>CONFLICT</code></td>
+<td><a href="./02.cases/13.case-figma-ticket-drift.html">13</a></td>
+</tr>
+<tr>
+<td>GitHub / GitLab / CI</td>
+<td>PR, pipeline, key</td>
+<td>Comment on ticket / PR; <strong>not</strong> merge</td>
+<td><a href="./02.cases/15.case-pr-ci-vs-ticket.html">15</a></td>
+</tr>
+<tr>
+<td>SQL / Excel / CSV</td>
+<td>Replica SELECT, sheet</td>
+<td>Report draft + cites</td>
+<td>No prod write · <a href="./02.cases/19.case-data-sql-excel-report.html">19</a></td>
+</tr>
+<tr>
+<td>Notion / Confluence</td>
+<td>Draft page</td>
+<td>Published page + link on ticket</td>
+<td>Canonical wiki wins vs chat</td>
+</tr>
+<tr>
+<td>All of the above</td>
+<td>Weekly scan</td>
+<td>Status pack to leads</td>
+<td><a href="./02.cases/16.case-status-pack.html">16</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>5. Pipes (MCP) — in vs out</h2>
+<p>MCP is a <strong>bus</strong>, not a brain. Policy sits in Zone 5. Full contract: <a href="./01.architecture/03.mcp-system-map.html">03</a>.</p>
+<pre class="mermaid">flowchart LR
+  C[Cursor or Claude Project]
+
+  subgraph read ["IN — always allowed"]
+    R1[Jira GET]
+    R2[Drive / Teams GET]
+    R3[Wiki GET]
+    R4[Figma GET]
+    R5[Git / CI GET]
+    R6[SQL replica SELECT]
+  end
+
+  subgraph write ["OUT — policy or exception"]
+    W1[Jira comment / label / Ready]
+    W2[Drive folder move]
+    W3[Wiki publish]
+    W4[Figma comment]
+  end
+
+  subgraph never ["NEVER"]
+    N1[Ready outside policy]
+    N2[In Progress / Done]
+    N3[Git merge / push main]
+    N4[Prod SQL write]
+    N5[PII into RAG]
+  end
+
+  read --&gt; C --&gt; write
+  C -.-&gt; never</pre>
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Allowed</th>
+<th>Default deny</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>In</strong></td>
+<td>Any GET the org already lets the PM see</td>
+<td>Scraping around 401/403</td>
+</tr>
+<tr>
+<td><strong>Out (classify skill)</strong></td>
+<td>Comment + labels only</td>
+<td>Folder move, Ready</td>
+</tr>
+<tr>
+<td><strong>Out (apply-policy)</strong></td>
+<td>Ready / <code>/verified</code> if <a href="./02.cases/24.case-auto-ready-vs-pm-exception.html">24</a> all true</td>
+<td>Exception flags set</td>
+</tr>
+<tr>
+<td><strong>Out (apply-gate)</strong></td>
+<td>PM phrase on exception queue</td>
+<td>Silent bulk Ready</td>
+</tr>
+<tr>
+<td><strong>Never</strong></td>
+<td>—</td>
+<td>Merge, Done, prod write, invent AC</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>6. Three traffic patterns (the actual loops)</h2>
+<h3>A — Green (happy path)</h3>
+<p>Sender / system → Zone 1 → MCP in → Nucleus + RAG cite → A–G pass + policy → <strong>auto Ready / <code>/verified</code></strong> → Pod <strong>pulls</strong>. TDM is <strong>not</strong> in the loop. Sample later.</p>
+<pre class="mermaid">sequenceDiagram
+  participant S as Sender / Drive / Jira
+  participant MCP
+  participant N as Nucleus
+  participant G as Gate
+  participant D as Destination
+  participant P as Pod
+
+  S-&gt;&gt;MCP: artifact
+  MCP-&gt;&gt;N: bytes + metadata
+  N-&gt;&gt;N: RAG cite + A-G
+  N-&gt;&gt;G: VERIFIED + policy OK
+  G-&gt;&gt;D: auto Ready / /verified
+  P-&gt;&gt;D: pull
+  Note over N,G: TDM not here</pre>
+<h3>B — Red (bounce to sender)</h3>
+<p>Missing A–G → Needs_AC assigned to <strong>sender</strong> + SLA. Re-score. Auto Ready if now green. TDM still not here unless bounce ≥ 2 / dispute / SLA miss.</p>
+<pre class="mermaid">sequenceDiagram
+  participant N as Nucleus
+  participant J as Jira
+  participant S as Sender
+  participant TDM
+
+  N-&gt;&gt;J: REWORK + reason codes
+  J-&gt;&gt;S: Needs_AC SLA 24-48h
+  S-&gt;&gt;J: fix
+  N-&gt;&gt;J: re-score
+  alt green + policy
+    J-&gt;&gt;J: auto Ready
+  else still red
+    J-&gt;&gt;S: still Needs_AC
+  else dispute / bounce≥2
+    S-&gt;&gt;TDM: exception queue
+  end</pre>
+<h3>C — Yellow (PM exception)</h3>
+<p>P0, <code>CONFLICT</code>, PII, new author, low confidence, SoW gap → <code>pm-review</code>. TDM stamps or bounces. Then destination same as green.</p>
+<p>Pods <strong>never</strong> wait on C to pull a green ticket sitting in Ready.</p>
+<hr>
+<h2>7. Memory planes (do not mix)</h2>
+<table>
+<thead>
+<tr>
+<th>Plane</th>
+<th>Zone</th>
+<th>Example</th>
+<th>Wins a fight?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Source of truth</strong></td>
+<td>6</td>
+<td>Jira AC, Drive <code>/verified</code>, Confluence ADR, Git default branch</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td><strong>Project memory (RAG)</strong></td>
+<td>4</td>
+<td>Chunks of verified PRDs</td>
+<td>No — cite back to Zone 6</td>
+</tr>
+<tr>
+<td><strong>Working memory</strong></td>
+<td>3 AgentMemory <strong>or</strong> Claude Memory + wiki</td>
+<td>“Trusted author = BA Linh”</td>
+<td>No — convention only</td>
+</tr>
+<tr>
+<td><strong>Code intelligence</strong></td>
+<td>3 CodeGraph</td>
+<td>Blast radius of a column rename</td>
+<td>No — not sprint status</td>
+</tr>
+</tbody></table>
+<p>Conflict between Drive vs Confluence vs Notion → class <code>CONFLICT</code>, human picks canonical (<a href="./02.cases/14.case-sot-conflict.html">14</a>). Chat never wins.</p>
+<hr>
+<h2>8. People on the map (Zone 0)</h2>
+<pre class="mermaid">flowchart TB
+  subgraph in_people [IN to the system]
+    CS[CS]
+    Mkt[Marketing]
+    Fraud[Fraud]
+    Pay[Payments]
+    BA[BA / PO]
+  end
+
+  subgraph ops [ON the system]
+    TDM[TDM owns policy + exceptions + honest status]
+    AI[Nucleus classifies]
+  end
+
+  subgraph out_people [OUT of the system]
+    Pods[5-6 technical pods pull Ready]
+    Head[Dept Head gets status / trade-off]
+  end
+
+  in_people --&gt;|asks / docs| AI
+  AI --&gt;|red| in_people
+  AI --&gt;|green| Pods
+  AI --&gt;|yellow| TDM
+  TDM --&gt;|exception OK| Pods
+  TDM --&gt;|status pack| Head</pre>
+<table>
+<thead>
+<tr>
+<th>Actor</th>
+<th>In they provide</th>
+<th>Out they receive</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CS / Mkt / Fraud / Payments</td>
+<td>Messy ask, files, examples</td>
+<td><code>REWORK</code> reason codes <strong>or</strong> shipped outcome</td>
+</tr>
+<tr>
+<td>BA / PO</td>
+<td>Draft stories, Figma</td>
+<td>Same rubric; they are often the sender</td>
+</tr>
+<tr>
+<td>TDM</td>
+<td>Policy, sample, exception stamp, status</td>
+<td>Exception queue — <strong>not</strong> every ticket</td>
+</tr>
+<tr>
+<td>Pod</td>
+<td>How, estimates, CI, pod-bounce</td>
+<td>Ready column only</td>
+</tr>
+<tr>
+<td>Lead</td>
+<td>Priority when CS vs Fraud collide</td>
+<td>Honest On Track / At Risk / Blocked</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Blocks</td>
+<td>Quarantine path; no RAG</td>
+</tr>
+</tbody></table>
+<p>RACI detail: <a href="./01.architecture/04.departments-actors.html">04</a>.</p>
+<hr>
+<h2>9. What must never cross a zone boundary</h2>
+<table>
+<thead>
+<tr>
+<th>From → to</th>
+<th>Blocked</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Slack → Git</td>
+<td>Direct commit from a ping</td>
+<td>Delivery mismatch <a href="./02.cases/15.case-pr-ci-vs-ticket.html">15</a></td>
+</tr>
+<tr>
+<td>Meet → Jira Ready</td>
+<td>Auto-push from Fireflies</td>
+<td>Verbal AC ≠ DoR <a href="./02.cases/12.case-meet-to-ready.html">12</a></td>
+</tr>
+<tr>
+<td>Nucleus → <code>/verified</code></td>
+<td>Write without class + policy</td>
+<td>Hallucinated AC <a href="./03.edges/38.edge-ai-hallucinated-ac.html">38</a> <a href="./03.edges/39.edge-auto-move-without-pm.html">39</a></td>
+</tr>
+<tr>
+<td>Intake Drive → RAG</td>
+<td>Ingest unverified</td>
+<td>Poisoned memory <a href="./01.architecture/05.rag-architecture.html">05</a></td>
+</tr>
+<tr>
+<td>SQL prod → chat</td>
+<td>Dump / write</td>
+<td><a href="./01.architecture/09.security-pii-governance.html">09</a> <a href="./03.edges/42.edge-sql-prod-write.html">42</a></td>
+</tr>
+<tr>
+<td>Ready → In Progress</td>
+<td>TDM assign</td>
+<td>Q07 bottleneck; <strong>pod pull</strong></td>
+</tr>
+<tr>
+<td>Pod-bounce → TDM inbox</td>
+<td>Default assignee = TDM</td>
+<td>Sender owns red <a href="./03.edges/45.edge-pod-bounce-to-sender.html">45</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>10. Where to go next</h2>
+<table>
+<thead>
+<tr>
+<th>If you want…</th>
+<th>Open</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The law</td>
+<td><a href="./01.architecture/01.operating-model.html">01</a></td>
+</tr>
+<tr>
+<td>Cursor vs Claude vs Sourcegraph</td>
+<td><a href="./01.architecture/02.nucleus-and-parallel-stacks.html">02</a></td>
+</tr>
+<tr>
+<td><strong>claude.ai nucleus (company Claude)</strong></td>
+<td><a href="./01.architecture/02b.claude-ai-nucleus.html">02b</a> · <a href="#3b--claude-alternative-zone-3-swap">§3b</a></td>
+</tr>
+<tr>
+<td>Every MCP read/write/never</td>
+<td><a href="./01.architecture/03.mcp-system-map.html">03</a></td>
+</tr>
+<tr>
+<td>RAG collections</td>
+<td><a href="./01.architecture/05.rag-architecture.html">05</a></td>
+</tr>
+<tr>
+<td>Labels + commit paths</td>
+<td><a href="./01.architecture/06.classification-and-pm-gate.html">06</a></td>
+</tr>
+<tr>
+<td>PMBOK 8 — Focus Areas, domains, outcomes</td>
+<td><a href="./01.pmp-phase-mapping.html">01</a></td>
+</tr>
+<tr>
+<td>Auto-Ready vs PM vs sender</td>
+<td><a href="./02.cases/24.case-auto-ready-vs-pm-exception.html">24</a></td>
+</tr>
+<tr>
+<td>Spike / trade-off / incident</td>
+<td><a href="./02.cases/25.case-spike-timebox.html">25</a> <a href="./02.cases/26.case-dept-tradeoff.html">26</a> <a href="./02.cases/27.case-incident-not-story.html">27</a></td>
+</tr>
+<tr>
+<td>File catalog</td>
+<td><a href="./00.index.html">00.index</a></td>
+</tr>
+</tbody></table>
+</article></main>
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            // Match Cursor / VS Code Markdown preview (dark workbench → mermaid "dark")
+            theme: 'dark',
+            securityLevel: 'loose',
+            flowchart: {
+                htmlLabels: true,
+                curve: 'basis',
+                useMaxWidth: true,
+                padding: 16,
+                nodeSpacing: 24,
+                rankSpacing: 48,
+                diagramPadding: 12
+            },
+            sequence: { useMaxWidth: false, diagramMarginX: 40, diagramMarginY: 20, actorMargin: 50, boxMargin: 10 },
+            er: { useMaxWidth: false },
+            gantt: { useMaxWidth: false },
+            journey: { useMaxWidth: false },
+            timeline: { useMaxWidth: false },
+            class: { useMaxWidth: false },
+            state: { useMaxWidth: false },
+            pie: { useMaxWidth: false },
+            mindmap: { useMaxWidth: false }
+        });
+
+        async function renderMermaid() {
+            const nodes = [...document.querySelectorAll('pre.mermaid')];
+            for (const el of nodes) {
+                const code = (el.textContent || '').trim();
+                if (!code) continue;
+                try {
+                    const id = 'mmd-' + Math.random().toString(36).slice(2);
+                    const { svg } = await mermaid.render(id, code);
+
+                    const stage = document.createElement('div');
+                    stage.className = 'mermaid-stage';
+
+                    const toolbar = document.createElement('div');
+                    toolbar.className = 'mermaid-toolbar';
+                    toolbar.innerHTML = [
+                        '<button type="button" data-act="zoom-out" title="Zoom out">−</button>',
+                        '<input class="zoom-input" type="number" min="5" max="500" step="5" value="100" title="Type zoom % then Enter" aria-label="Zoom percent">',
+                        '<span class="zoom-suffix">%</span>',
+                        '<button type="button" data-act="zoom-in" title="Zoom in">+</button>',
+                        '<button type="button" data-act="reset" title="Reset view">⟲</button>',
+                        '<button type="button" data-act="fullscreen" title="Fullscreen">⛶</button>'
+                    ].join('');
+
+                    const hint = document.createElement('div');
+                    hint.className = 'mermaid-hint';
+                    hint.textContent = 'Scroll zoom · Drag pan · Type % · ⛶ fullscreen';
+
+                    const viewport = document.createElement('div');
+                    viewport.className = 'mermaid-viewport';
+
+                    const wrap = document.createElement('div');
+                    wrap.className = 'mermaid';
+                    wrap.innerHTML = svg;
+                    const svgEl = wrap.querySelector('svg');
+                    if (svgEl) {
+                        svgEl.removeAttribute('height');
+                        svgEl.setAttribute('width', '100%');
+                        svgEl.style.maxWidth = '100%';
+                        svgEl.style.width = '100%';
+                        svgEl.style.height = 'auto';
+                    }
+
+                    viewport.appendChild(wrap);
+                    stage.appendChild(toolbar);
+                    stage.appendChild(hint);
+                    stage.appendChild(viewport);
+                    el.replaceWith(stage);
+
+                    const pz = Panzoom(wrap, {
+                        maxScale: 5,
+                        minScale: 0.05,
+                        // No contain — free zoom/pan (contain:'outside' locked min by diagram size)
+                        cursor: 'grab'
+                    });
+                    viewport.addEventListener('wheel', pz.zoomWithWheel);
+                    const zoomInput = toolbar.querySelector('.zoom-input');
+                    let syncing = false;
+                    const syncZoom = () => {
+                        if (!zoomInput || syncing) return;
+                        syncing = true;
+                        zoomInput.value = String(Math.round(pz.getScale() * 100));
+                        syncing = false;
+                    };
+                    const fitView = () => {
+                        const svg = wrap.querySelector('svg');
+                        if (!svg) return;
+                        pz.reset({ animate: false });
+                        // Fullscreen: fit both axes. Inline: keep width 100% (Markdown-preview style).
+                        if (!stage.classList.contains('is-fullscreen')) {
+                            syncZoom();
+                            return;
+                        }
+                        const bbox = svg.getBBox();
+                        const pad = 72;
+                        const sx = (viewport.clientWidth - pad) / Math.max(bbox.width, 1);
+                        const sy = (viewport.clientHeight - pad) / Math.max(bbox.height, 1);
+                        const scale = Math.max(0.05, Math.min(sx, sy, 1));
+                        pz.zoom(scale, { animate: false });
+                        requestAnimationFrame(() => {
+                            const wr = wrap.getBoundingClientRect();
+                            const vr = viewport.getBoundingClientRect();
+                            const pan = pz.getPan();
+                            pz.pan(
+                                pan.x + (vr.left + vr.width / 2) - (wr.left + wr.width / 2),
+                                pan.y + (vr.top + vr.height / 2) - (wr.top + wr.height / 2),
+                                { animate: false }
+                            );
+                            syncZoom();
+                        });
+                    };
+                    const applyZoomPct = () => {
+                        if (!zoomInput) return;
+                        let pct = Number(zoomInput.value);
+                        if (!Number.isFinite(pct)) pct = 100;
+                        pct = Math.min(500, Math.max(5, Math.round(pct)));
+                        zoomInput.value = String(pct);
+                        pz.zoom(pct / 100, { animate: true });
+                    };
+                    requestAnimationFrame(() => requestAnimationFrame(fitView));
+                    zoomInput.addEventListener('keydown', (ev) => {
+                        if (ev.key === 'Enter') {
+                            ev.preventDefault();
+                            applyZoomPct();
+                            zoomInput.blur();
+                        }
+                        // Don't let panzoom / page steal keys while typing
+                        ev.stopPropagation();
+                    });
+                    zoomInput.addEventListener('change', applyZoomPct);
+                    zoomInput.addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        zoomInput.select();
+                    });
+                    wrap.addEventListener('panzoomchange', syncZoom);
+                    toolbar.addEventListener('click', (ev) => {
+                        const btn = ev.target.closest('button[data-act]');
+                        if (!btn) return;
+                        const act = btn.dataset.act;
+                        if (act === 'zoom-in') pz.zoomIn();
+                        if (act === 'zoom-out') pz.zoomOut();
+                        if (act === 'reset') { fitView(); return; }
+                        if (act === 'fullscreen') {
+                            const on = stage.classList.toggle('is-fullscreen');
+                            btn.title = on ? 'Exit fullscreen (Esc)' : 'Fullscreen';
+                            btn.textContent = on ? '✕' : '⛶';
+                            document.body.style.overflow = on ? 'hidden' : '';
+                            requestAnimationFrame(() => fitView());
+                            return;
+                        }
+                        syncZoom();
+                    });
+                    document.addEventListener('keydown', (ev) => {
+                        if (ev.key === 'Escape' && stage.classList.contains('is-fullscreen')) {
+                            stage.classList.remove('is-fullscreen');
+                            const fsBtn = toolbar.querySelector('[data-act="fullscreen"]');
+                            if (fsBtn) { fsBtn.textContent = '⛶'; fsBtn.title = 'Fullscreen'; }
+                            document.body.style.overflow = '';
+                            requestAnimationFrame(() => fitView());
+                        }
+                    });
+                } catch (err) {
+                    el.classList.add('mermaid-error');
+                    el.textContent = 'Mermaid error: ' + (err && err.message ? err.message : String(err)) + '\n\n' + code;
+                    console.error('Mermaid failed:', err);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await renderMermaid();
+
+            document.querySelectorAll('.code-panel .code-copy').forEach((btn) => {
+                btn.addEventListener('click', async () => {
+                    const panel = btn.closest('.code-panel');
+                    const codeEl = panel?.querySelector('code');
+                    const text = codeEl?.textContent || '';
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        btn.textContent = 'Copied';
+                        btn.classList.add('is-copied');
+                        setTimeout(() => {
+                            btn.textContent = 'Copy';
+                            btn.classList.remove('is-copied');
+                        }, 1400);
+                    } catch {
+                        btn.textContent = 'Failed';
+                        setTimeout(() => { btn.textContent = 'Copy'; }, 1400);
+                    }
+                });
+            });
+
+            const sidebar = document.getElementById('sidebar');
+            const STORAGE_KEY = 'ai-pm-nav-open';
+            const currentUrl = new URL(window.location.href);
+
+            function loadOpenSet() {
+                try { return new Set(JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]')); }
+                catch { return new Set(); }
+            }
+            function saveOpenSet(set) {
+                sessionStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+            }
+
+            let openSet = loadOpenSet();
+
+            function setOpen(folder, open) {
+                const id = folder.dataset.navId;
+                folder.classList.toggle('open', open);
+                folder.querySelector('.folder-toggle')?.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (open) openSet.add(id); else openSet.delete(id);
+                saveOpenSet(openSet);
+            }
+
+            document.querySelectorAll('.nav-folder[data-nav-id]').forEach(folder => {
+                if (openSet.has(folder.dataset.navId)) setOpen(folder, true);
+            });
+
+            document.querySelectorAll('.folder-toggle').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const folder = btn.closest('.nav-folder');
+                    setOpen(folder, !folder.classList.contains('open'));
+                });
+            });
+
+            document.querySelectorAll('.nav-item').forEach(link => {
+                const linkUrl = new URL(link.href);
+                if (currentUrl.pathname === linkUrl.pathname) {
+                    link.classList.add('active');
+                    let parent = link.closest('.nav-folder');
+                    while (parent) {
+                        setOpen(parent, true);
+                        parent = parent.parentElement?.closest('.nav-folder');
+                    }
+                    link.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+            });
+
+            const saved = sessionStorage.getItem('sb-scroll');
+            if (saved) sidebar.scrollTop = parseInt(saved);
+            sidebar.onscroll = () => sessionStorage.setItem('sb-scroll', sidebar.scrollTop);
+        });
+    </script>
+</body>
+</html>
