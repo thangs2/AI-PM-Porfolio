@@ -194,15 +194,17 @@
 <h2>Problem</h2>
 <p>A feature exists, or a dump of tasks. Need to know if <strong>Feature → Epic → Story → Subtask</strong> is legal and if stories are pull-ready. Ready is <strong>auto under policy</strong> or PM exception — not a TDM click on every card (<a href="./24.case-auto-ready-vs-pm-exception.html">24</a>).</p>
 <h2>Trigger</h2>
+<p>Landscape <a href="../00.overall-landscape.md#1b--what-starts-a-run-triggers">§1b</a>. Create ≠ Ready.</p>
 <ul>
-<li>New/updated issue via MCP webhook or daily scan</li>
+<li><strong>A</strong> New/updated issue via MCP webhook · <strong>C</strong> daily Intake sweep (later)</li>
 <li>Output of case <a href="./10.case-document-intake-verify.html">10</a> “split this pack”</li>
-<li>Meeting action turned into a stub ticket (<a href="./12.case-meet-to-ready.html">12</a>)</li>
+<li>Meeting action turned into a stub ticket (<a href="./12.case-meet-to-ready.html">12</a>) — still Intake</li>
+<li>Sender/BA fix on <code>Needs_AC</code> → <strong>A</strong> re-score</li>
 </ul>
 <h2>Departments</h2>
 <p>Requestor dept (metric owner) · BA/PO · TDM · Pod(s) · Head on priority only</p>
 <h2>Systems / MCP</h2>
-<p><code>mcp-jira</code> read/write comments &amp; labels · RAG <code>col_jira</code> + <code>col_requirements</code> · AgentMemory split conventions · Figma MCP if design linked</p>
+<p><code>mcp-jira</code> read/write comments &amp; labels · RAG <code>col_jira</code> + <code>col_requirements</code> · AgentMemory split conventions · Figma / Penpot MCP if design linked</p>
 <h2>Components</h2>
 <pre class="mermaid">flowchart TB
   J[(Jira)] --&gt; MCP[mcp-jira]

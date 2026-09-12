@@ -193,6 +193,7 @@
     <main id="content"><article class="markdown-body"><h1>00 — Overall landscape</h1>
 <p>One map of the AI TDM operating system: <strong>zones</strong>, <strong>components</strong>, <strong>in / out</strong>. Detail lives in mapping <a href="./01.pmp-phase-mapping.html"><code>01</code></a>, architecture <code>01</code>–<code>09</code>, cases <code>10</code>–<code>27</code>, edges <code>30</code>–<code>52</code>. This file is the picture you hold in your head.</p>
 <p>Law (from <a href="./01.architecture/01.operating-model.html">01</a>): AI reads, classifies, drafts. Green auto-commits. Red returns to <strong>sender</strong>. PM owns <strong>exceptions + the rule</strong>. Nucleus is <strong>never</strong> the source of truth.</p>
+<p>Zones are a <strong>dataflow</strong>, not an always-on BPMN. A BA creating a Jira ticket (Zone 1) does <strong>not</strong> run the nucleus until a <strong>trigger</strong> fires (<a href="#1b--what-starts-a-run-triggers">§1b</a>).</p>
 <p><strong>Cockpit is swappable.</strong> Diagrams below use Cursor as the default Zone 3. Company-Claude map: <a href="#3b--claude-alternative-zone-3-swap">§3b</a> and <a href="./01.architecture/02b.claude-ai-nucleus.html">02b</a>. Zones 1, 5, 6 stay the same.</p>
 <hr>
 <h2>1. Zones (left → right)</h2>
@@ -212,7 +213,7 @@
     Meet[Meet / transcript]
     Drive[Drive / Teams files]
     Slack[Slack / Lark ping]
-    FigIn[Figma]
+    FigIn[Figma / Penpot]
     GitIn[Git / CI]
     SqlIn[SQL / Excel / CSV]
     JiraIn[Jira Intake]
@@ -280,6 +281,142 @@
 <li><strong>claude.ai / Desktop / Code swap:</strong> <a href="./01.architecture/02b.claude-ai-nucleus.html">02b</a> · <a href="#3b--claude-alternative-zone-3-swap">§3b</a></li>
 </ul>
 <hr>
+<h2>1b — What starts a run (triggers)</h2>
+<p>Trigger is <strong>not</strong> a seventh zone. It sits <strong>between</strong> Zone 1 (artifact exists) and Zone 2 (MCP fetch). Cursor is the <strong>cockpit</strong>, not the clock.</p>
+<pre class="mermaid">flowchart TB
+  subgraph z1 [ZONE 1 — artifact sitting]
+    Jira[Jira Intake]
+    Drive[Drive / Teams /intake]
+    Meet[Transcript]
+    Slack[Slack / Lark]
+    Other[Figma / Penpot / Git / SQL]
+  end
+
+  subgraph filt [Filter — all must hold]
+    F1[Right case for artifact]
+    F2[Intake / ai:intake — not In Progress or Done]
+    F3[MCP can GET — no 401/403]
+  end
+
+  subgraph trig ["TRIGGER — who wakes Zone 3"]
+    WH["A Event webhook&lt;br/&gt;issue created/updated · file in /intake"]
+    CAL["B Calendar HITL&lt;br/&gt;Monday 9:00 reminder · TDM runs /scan-blocked in Cursor"]
+    JOB["C Scheduler later&lt;br/&gt;Actions / LangGraph / agenda — IDE may be closed"]
+    MAN["D Manual&lt;br/&gt;/classify in cockpit"]
+  end
+
+  subgraph z2 [ZONE 2–6]
+    MCP[MCP GET]
+    Nuc[Nucleus classify]
+    Gate[Gate]
+    Dest[Ready / Needs_AC / exception]
+  end
+
+  Jira --&gt; filt
+  Drive --&gt; filt
+  Meet --&gt; filt
+  Slack --&gt; filt
+  Other --&gt; filt
+  filt --&gt;|pass| WH
+  filt --&gt;|pass| CAL
+  filt --&gt;|pass| JOB
+  filt --&gt;|pass| MAN
+  WH --&gt; MCP
+  CAL --&gt; MCP
+  JOB --&gt; MCP
+  MAN --&gt; MCP
+  MCP --&gt; Nuc --&gt; Gate --&gt; Dest</pre>
+<p><strong>Clock vs cockpit</strong></p>
+<table>
+<thead>
+<tr>
+<th>Phase (<a href="./02.cases/24.case-auto-ready-vs-pm-exception.html">24</a>)</th>
+<th>What “cron” means</th>
+<th>Who runs</th>
+<th>Cursor required?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>0</strong></td>
+<td>Calendar / reminder (“Monday 9:00”)</td>
+<td>TDM types <code>/scan-blocked</code> or <code>/classify</code></td>
+<td><strong>Yes</strong> — HITL session</td>
+</tr>
+<tr>
+<td><strong>1+</strong></td>
+<td>Real job (GitHub Actions, LangGraph, cloud scheduler, <code>mu-agenda</code>)</td>
+<td>Runner wakes the <strong>same</strong> MCP + policy</td>
+<td><strong>No</strong> — headless</td>
+</tr>
+</tbody></table>
+<p>Cursor is <strong>not</strong> a cron daemon. Laptop closed → Phase 0 scan does not run. Do not install a “cron app” until JQL/skills are boring (<a href="./02.cases/23.case-weekly-blocked-scan.html">23</a>: manual <strong>≥ 3 weeks</strong> before LangGraph).</p>
+<p><strong>Four wake-ups</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Trigger</th>
+<th>Typical artifact</th>
+<th>Then</th>
+<th>Not</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>A</strong></td>
+<td>Webhook / folder watch</td>
+<td>Jira create/update (<a href="./02.cases/11.case-jira-hierarchy-quality.html">11</a>); Drive <code>/intake</code> (<a href="./02.cases/10.case-document-intake-verify.html">10</a>); Slack packet (<a href="./02.cases/22.case-dontpassmessage.html">22</a>)</td>
+<td>Classify now</td>
+<td>Meet → Ready (<a href="./02.cases/12.case-meet-to-ready.html">12</a>)</td>
+</tr>
+<tr>
+<td><strong>B</strong></td>
+<td>Calendar + cockpit</td>
+<td>Weekly blocked/risk (<a href="./02.cases/23.case-weekly-blocked-scan.html">23</a>); status pack (<a href="./02.cases/16.case-status-pack.html">16</a>)</td>
+<td>Draft + <strong>breakpoint</strong> — TDM sends</td>
+<td>Auto-Slack the company</td>
+</tr>
+<tr>
+<td><strong>C</strong></td>
+<td>Scheduler (later)</td>
+<td>Same as B, plus daily Intake sweep</td>
+<td>Same MCP job as A/B, no IDE</td>
+<td>Cursor-as-clock</td>
+</tr>
+<tr>
+<td><strong>D</strong></td>
+<td>Manual <code>/classify</code></td>
+<td>Paste, exception, Phase 0 calibrate</td>
+<td>Same gate</td>
+<td>Silent bulk Ready</td>
+</tr>
+</tbody></table>
+<p><strong>Re-score</strong> is <strong>A</strong> again: sender/BA fixes <code>Needs_AC</code> → Jira <code>updated</code> → classify. That is how a BA ticket becomes Ready — not “create = Ready”.</p>
+<p><strong>Filter (job refuses)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Must be true</th>
+<th>Else</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Status Intake / label <code>ai:intake</code> (or the case’s entry status)</td>
+<td>Skip In Progress / Done — AI never sets those (<a href="./01.architecture/06.classification-and-pm-gate.html">06</a>)</td>
+</tr>
+<tr>
+<td>Readable via MCP</td>
+<td><a href="./03.edges/50.edge-env-access-blocked.html">50</a> — do not guess</td>
+</tr>
+<tr>
+<td>Right case</td>
+<td>File → <a href="./02.cases/10.case-document-intake-verify.html">10</a>; Jira graph → <a href="./02.cases/11.case-jira-hierarchy-quality.html">11</a>; Meet → <a href="./02.cases/12.case-meet-to-ready.html">12</a> Intake stubs only; Sev ping → <a href="./02.cases/27.case-incident-not-story.html">27</a> not A–G</td>
+</tr>
+<tr>
+<td>Write Ready only if <a href="./02.cases/24.case-auto-ready-vs-pm-exception.html">24</a> policy</td>
+<td>Comment + labels always; Ready is apply-policy</td>
+</tr>
+</tbody></table>
+<hr>
 <h2>2. What each zone is</h2>
 <table>
 <thead>
@@ -302,7 +439,7 @@
 <td><strong>1</strong></td>
 <td>Source</td>
 <td>Raw signal</td>
-<td>Meet, Drive, Slack, Figma, Git, SQL, Jira stubs, wiki drafts</td>
+<td>Meet, Drive, Slack, Figma / Penpot, Git, SQL, Jira stubs, wiki drafts</td>
 <td>“Verified truth”</td>
 </tr>
 <tr>
@@ -405,7 +542,7 @@
 <p>Company lock on <strong>claude.ai</strong> does not rewrite the landscape. Only the <strong>cockpit + reasoner + working memory</strong> move. Sources, gate, destinations stay.</p>
 <pre class="mermaid">flowchart LR
   subgraph z1 [Zone 1 sources]
-    Src[Meet Drive Jira Slack Figma Git SQL]
+    Src[Meet Drive Jira Slack Figma / Penpot Git SQL]
   end
 
   subgraph z3c ["Zone 3 — Claude.ai  ★ not SoT"]
@@ -468,7 +605,7 @@
 <tr>
 <td>MCP</td>
 <td>IT <strong>connectors</strong></td>
-<td>Jira/Figma/Git write, CodeGraph</td>
+<td>Jira / Figma / Penpot / Git write, CodeGraph</td>
 </tr>
 <tr>
 <td>CodeGraph</td>
@@ -485,6 +622,7 @@
 <tr>
 <th>Source (Zone 1 in)</th>
 <th>Typical artifact</th>
+<th><strong>Trigger (§1b)</strong></th>
 <th>Destination (Zone 6 out)</th>
 <th>Notes</th>
 </tr>
@@ -492,56 +630,65 @@
 <tbody><tr>
 <td>Drive / Teams</td>
 <td>docx, pdf, csv, image</td>
+<td><strong>A</strong> folder watch / <strong>D</strong> paste</td>
 <td><code>/verified</code> or <code>/rework/{code}</code></td>
 <td>RAG ingest <strong>after</strong> <code>/verified</code> · <a href="./02.cases/10.case-document-intake-verify.html">10</a></td>
 </tr>
 <tr>
 <td>Meet</td>
 <td>Transcript / Gemini notes</td>
+<td><strong>D</strong> / Meet-end HITL</td>
 <td>Published MoM + Jira <strong>Intake</strong> stubs</td>
 <td><strong>Never</strong> Ready from the meeting · <a href="./02.cases/12.case-meet-to-ready.html">12</a></td>
 </tr>
 <tr>
 <td>Slack / Lark</td>
 <td>DontPassMessage</td>
+<td><strong>A</strong> if packet complete else bounce</td>
 <td>Intake ticket or bounce</td>
 <td>Context + impact + ask · <a href="./02.cases/22.case-dontpassmessage.html">22</a></td>
 </tr>
 <tr>
 <td>Jira</td>
 <td>Feature / Epic / Story dump</td>
+<td><strong>A</strong> create/update webhook · <strong>C</strong> daily sweep</td>
 <td>Ready <strong>or</strong> Needs_AC → sender</td>
-<td>Hierarchy + A–G · <a href="./02.cases/11.case-jira-hierarchy-quality.html">11</a></td>
+<td>Hierarchy + A–G · <a href="./02.cases/11.case-jira-hierarchy-quality.html">11</a> · create ≠ Ready</td>
 </tr>
 <tr>
-<td>Figma</td>
+<td>Figma / Penpot</td>
 <td>Frame / comments</td>
+<td><strong>A</strong> comment/gate · <strong>D</strong></td>
 <td>Ticket AC aligned or <code>CONFLICT</code></td>
 <td><a href="./02.cases/13.case-figma-ticket-drift.html">13</a></td>
 </tr>
 <tr>
 <td>GitHub / GitLab / CI</td>
 <td>PR, pipeline, key</td>
+<td><strong>A</strong> PR webhook</td>
 <td>Comment on ticket / PR; <strong>not</strong> merge</td>
 <td><a href="./02.cases/15.case-pr-ci-vs-ticket.html">15</a></td>
 </tr>
 <tr>
 <td>SQL / Excel / CSV</td>
 <td>Replica SELECT, sheet</td>
+<td><strong>D</strong> / <strong>B</strong> report slot</td>
 <td>Report draft + cites</td>
 <td>No prod write · <a href="./02.cases/19.case-data-sql-excel-report.html">19</a></td>
 </tr>
 <tr>
 <td>Notion / Confluence</td>
 <td>Draft page</td>
+<td><strong>D</strong> publish intent</td>
 <td>Published page + link on ticket</td>
 <td>Canonical wiki wins vs chat</td>
 </tr>
 <tr>
 <td>All of the above</td>
 <td>Weekly scan</td>
+<td><strong>B</strong> calendar + Cursor · <strong>C</strong> later</td>
 <td>Status pack to leads</td>
-<td><a href="./02.cases/16.case-status-pack.html">16</a></td>
+<td><a href="./02.cases/16.case-status-pack.html">16</a> <a href="./02.cases/23.case-weekly-blocked-scan.html">23</a></td>
 </tr>
 </tbody></table>
 <hr>
@@ -554,7 +701,7 @@
     R1[Jira GET]
     R2[Drive / Teams GET]
     R3[Wiki GET]
-    R4[Figma GET]
+    R4[Figma / Penpot GET]
     R5[Git / CI GET]
     R6[SQL replica SELECT]
   end
@@ -563,7 +710,7 @@
     W1[Jira comment / label / Ready]
     W2[Drive folder move]
     W3[Wiki publish]
-    W4[Figma comment]
+    W4[Figma / Penpot comment]
   end
 
   subgraph never ["NEVER"]
@@ -613,16 +760,18 @@
 <hr>
 <h2>6. Three traffic patterns (the actual loops)</h2>
 <h3>A — Green (happy path)</h3>
-<p>Sender / system → Zone 1 → MCP in → Nucleus + RAG cite → A–G pass + policy → <strong>auto Ready / <code>/verified</code></strong> → Pod <strong>pulls</strong>. TDM is <strong>not</strong> in the loop. Sample later.</p>
+<p>Sender / system → Zone 1 → <strong>trigger + filter (§1b)</strong> → MCP in → Nucleus + RAG cite → A–G pass + policy → <strong>auto Ready / <code>/verified</code></strong> → Pod <strong>pulls</strong>. TDM is <strong>not</strong> in the loop. Sample later.</p>
 <pre class="mermaid">sequenceDiagram
   participant S as Sender / Drive / Jira
+  participant T as Trigger A/B/C/D
   participant MCP
   participant N as Nucleus
   participant G as Gate
   participant D as Destination
   participant P as Pod
 
-  S-&gt;&gt;MCP: artifact
+  S-&gt;&gt;T: artifact sitting
+  T-&gt;&gt;MCP: webhook / calendar+HITL / job / manual
   MCP-&gt;&gt;N: bytes + metadata
   N-&gt;&gt;N: RAG cite + A-G
   N-&gt;&gt;G: VERIFIED + policy OK
@@ -640,6 +789,7 @@
   N-&gt;&gt;J: REWORK + reason codes
   J-&gt;&gt;S: Needs_AC SLA 24-48h
   S-&gt;&gt;J: fix
+  Note over S,J: Trigger A — Jira updated
   N-&gt;&gt;J: re-score
   alt green + policy
     J-&gt;&gt;J: auto Ready
@@ -730,7 +880,7 @@
 </tr>
 <tr>
 <td>BA / PO</td>
-<td>Draft stories, Figma</td>
+<td>Draft stories, Figma / Penpot</td>
 <td>Same rubric; they are often the sender</td>
 </tr>
 <tr>
@@ -811,6 +961,10 @@
 </tr>
 </thead>
 <tbody><tr>
+<td>When a run starts (webhook / calendar / job)</td>
+<td><a href="#1b--what-starts-a-run-triggers">§1b</a></td>
+</tr>
+<tr>
 <td>The law</td>
 <td><a href="./01.architecture/01.operating-model.html">01</a></td>
 </tr>
